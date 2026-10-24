@@ -19,6 +19,7 @@ import {
   Bookmark
 } from 'lucide-react';
 import { playNotificationSound } from '@/lib/audio/sound';
+import { getPusherClient } from '@/lib/pusher/client';
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -37,29 +38,44 @@ export default function Navbar() {
     fetchUser();
   }, [pathname]);
 
-  // Real-time notifications and message badges via Server-Sent Events (SSE)
+  // Real-time notifications and message badges via Pusher (WebSocket) + SSE fallback
   useEffect(() => {
-    if (!currentUser) return;
+    if (!currentUser?.id) return;
 
     fetchNotifications();
     fetchUnreadMessages();
 
+    const handleIncomingNotification = (data: any) => {
+      if (data.type === 'MESSAGE') {
+        fetchUnreadMessages();
+        // If user is not on messages page, play chime
+        if (!pathname.startsWith('/messages')) {
+          playNotificationSound();
+        }
+      } else {
+        fetchNotifications();
+        playNotificationSound();
+      }
+    };
+
+    // 1. Pusher Channels (WebSocket) - Primary for Vercel Serverless
+    const pusher = getPusherClient();
+    let pusherChannel: any = null;
+    if (pusher) {
+      pusherChannel = pusher.subscribe(`user-${currentUser.id}`);
+      pusherChannel.bind('new-notification', (data: any) => {
+        handleIncomingNotification(data);
+      });
+    }
+
+    // 2. Server-Sent Events (SSE) fallback for local dev
     let eventSource: EventSource | null = null;
     try {
       eventSource = new EventSource('/api/notifications/stream');
       eventSource.addEventListener('user-event', (e) => {
         try {
           const data = JSON.parse(e.data);
-          if (data.type === 'MESSAGE') {
-            fetchUnreadMessages();
-            // If user is not on messages page, play chime
-            if (!pathname.startsWith('/messages')) {
-              playNotificationSound();
-            }
-          } else {
-            fetchNotifications();
-            playNotificationSound();
-          }
+          handleIncomingNotification(data);
         } catch {
           // ignore
         }
@@ -71,12 +87,24 @@ export default function Navbar() {
       // ignore
     }
 
+    // 3. Fallback polling every 30s when tab is active
+    const pollInterval = setInterval(() => {
+      if (typeof document !== 'undefined' && document.visibilityState === 'visible') {
+        fetchUnreadMessages();
+      }
+    }, 30000);
+
     return () => {
+      clearInterval(pollInterval);
+      if (pusher && pusherChannel) {
+        pusherChannel.unbind_all();
+        pusherChannel.unsubscribe();
+      }
       if (eventSource) {
         eventSource.close();
       }
     };
-  }, [currentUser, pathname]);
+  }, [currentUser?.id, pathname]);
 
   useEffect(() => {
     const handleRefresh = () => {

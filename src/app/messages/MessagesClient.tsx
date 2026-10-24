@@ -139,34 +139,49 @@ export default function MessagesClient({
     }
   }, [messages, currentUser?.id]);
 
-  // User-level SSE: Real-time incoming messages across OTHER conversations (background notifications)
+  // Real-time incoming messages across OTHER conversations (background notifications via Pusher + SSE fallback)
   useEffect(() => {
     if (!currentUser?.id) return;
 
+    const handleOtherMessage = (data: any) => {
+      if (data.type === 'MESSAGE') {
+        // If the incoming message belongs to the currently active conversation,
+        // the active conversation stream (/api/messages/stream / conversation channel) handles message appending, read receipts, and sound.
+        // Do NOT insert into messages here to prevent duplicate bubbles.
+        if (activeId && data.conversationId === activeId) {
+          return;
+        }
+
+        // Notification sound for incoming messages in other conversations
+        playNotificationSound();
+
+        // Refresh conversations list to update previews and unread badges
+        refreshConversationsList();
+
+        // Refresh navbar unread badge
+        window.dispatchEvent(new CustomEvent('gampus:refresh-unread'));
+        window.dispatchEvent(new CustomEvent('unilive:refresh-unread'));
+      }
+    };
+
+    // 1. Pusher Channels (WebSocket) for user-level notifications
+    const pusher = getPusherClient();
+    let pusherUserChannel: any = null;
+    if (pusher) {
+      pusherUserChannel = pusher.subscribe(`user-${currentUser.id}`);
+      pusherUserChannel.bind('new-notification', (data: any) => {
+        handleOtherMessage(data);
+      });
+    }
+
+    // 2. Server-Sent Events fallback
     let eventSource: EventSource | null = null;
     try {
       eventSource = new EventSource('/api/notifications/stream');
       eventSource.addEventListener('user-event', (e) => {
         try {
           const data = JSON.parse(e.data);
-          if (data.type === 'MESSAGE') {
-            // If the incoming message belongs to the currently active conversation,
-            // the active conversation stream (/api/messages/stream) handles message appending, read receipts, and sound.
-            // Do NOT insert into messages here to prevent duplicate bubbles.
-            if (activeId && data.conversationId === activeId) {
-              return;
-            }
-
-            // Notification sound for incoming messages in other conversations
-            playNotificationSound();
-
-            // Refresh conversations list to update previews and unread badges
-            refreshConversationsList();
-
-            // Refresh navbar unread badge
-            window.dispatchEvent(new CustomEvent('gampus:refresh-unread'));
-            window.dispatchEvent(new CustomEvent('unilive:refresh-unread'));
-          }
+          handleOtherMessage(data);
         } catch {
           // ignore
         }
@@ -179,6 +194,10 @@ export default function MessagesClient({
     }
 
     return () => {
+      if (pusher && pusherUserChannel) {
+        pusherUserChannel.unbind_all();
+        pusherUserChannel.unsubscribe();
+      }
       if (eventSource) {
         eventSource.close();
       }
