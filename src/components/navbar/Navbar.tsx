@@ -87,15 +87,7 @@ export default function Navbar() {
       // ignore
     }
 
-    // 3. Fallback polling every 30s when tab is active
-    const pollInterval = setInterval(() => {
-      if (typeof document !== 'undefined' && document.visibilityState === 'visible') {
-        fetchUnreadMessages();
-      }
-    }, 30000);
-
     return () => {
-      clearInterval(pollInterval);
       if (pusher && pusherChannel) {
         pusherChannel.unbind_all();
         pusherChannel.unsubscribe();
