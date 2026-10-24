@@ -732,7 +732,7 @@ export default function CreateListingPage() {
             <div>
               <span className="block text-sm font-bold text-slate-800">Beni Telefonla Arayabilsinler</span>
               <span className="block text-xs text-slate-500">
-                Açık olursa ilanınızda &quot;Telefonu Göster&quot; butonu yer alır. Kapalı tutarsanız öğrenciler yalnızca UniLive üzerinden mesajlaşabilir.
+                Açık olursa ilanınızda &quot;Telefonu Göster&quot; butonu yer alır. Kapalı tutarsanız öğrenciler yalnızca Gampüs üzerinden mesajlaşabilir.
               </span>
             </div>
             <label className="relative inline-flex items-center cursor-pointer shrink-0">

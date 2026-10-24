@@ -317,7 +317,7 @@ export default function AdminClient({
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-amber-400 font-bold text-xs uppercase tracking-widest">
             <ShieldAlert className="w-4 h-4" />
-            <span>UNILIVE Yönetim Paneli</span>
+            <span>Gampüs Yönetim Paneli</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
             Sistem ve Platform Yönetimi
@@ -436,7 +436,7 @@ export default function AdminClient({
           <div className="bg-white border border-slate-200 rounded-3xl p-6 space-y-4 shadow-xs">
             <h3 className="font-extrabold text-slate-900 text-lg">Platform Durumu</h3>
             <p className="text-xs text-slate-500">
-              UNILIVE veritabanında aktif durumda {stats.activeListings} ilan ve {stats.verifiedStudents} .edu.tr onaylı öğrenci bulunmaktadır.
+              Gampüs veritabanında aktif durumda {stats.activeListings} ilan ve {stats.verifiedStudents} .edu.tr onaylı öğrenci bulunmaktadır.
             </p>
           </div>
         </div>

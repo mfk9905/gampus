@@ -30,7 +30,7 @@ const envSchema = z.object({
 
   // Resend Email (Opsiyonel / Üretimde e-posta gönderimi için gereklidir)
   RESEND_API_KEY: z.string().optional(),
-  EMAIL_FROM: z.string().optional().default('UNILIVE <noreply@unilive.app>'),
+  EMAIL_FROM: z.string().optional().default('Gampüs <noreply@gampus.app>'),
 
   // Cloudinary Image Storage (Opsiyonel / Üretimde görsel yükleme için gereklidir)
   CLOUDINARY_CLOUD_NAME: z.string().optional(),

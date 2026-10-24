@@ -3,7 +3,7 @@ import { prisma } from '@/lib/db/prisma';
 import { env } from '@/lib/env';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = (env.NEXT_PUBLIC_APP_URL || 'https://unilive.app').replace(/\/$/, '');
+  const baseUrl = (env.NEXT_PUBLIC_APP_URL || 'https://gampus.app').replace(/\/$/, '');
 
   const staticPages: MetadataRoute.Sitemap = [
     {

@@ -347,7 +347,7 @@ export default function ListingDetailClient({ listing, currentUserId }: ListingD
               </div>
               <ul className="text-xs text-teal-800 space-y-1 list-disc pl-4 font-medium">
                 <li>Evi veya eşyayı canlı görmeden kesinlikle kapora/ön ödeme göndermeyiniz.</li>
-                <li>Şüpheli ödeme ve IBAN taleplerini derhal UNILIVE ekibine bildirin.</li>
+                <li>Şüpheli ödeme ve IBAN taleplerini derhal Gampüs ekibine bildirin.</li>
                 <li>Elden teslim veya kiralama süreçlerinde satıcı/ev sahibiyle doğrudan iletişime geçiniz.</li>
               </ul>
             </div>

@@ -12,7 +12,7 @@ export interface TrustScoreBreakdown {
 }
 
 /**
- * Calculates UNILIVE Trust Score 2.0 (0 to 100) for a user.
+ * Calculates Gampüs Trust Score 2.0 (0 to 100) for a user.
  */
 export async function calculateTrustScore(userId: string): Promise<TrustScoreBreakdown> {
   const user = await prisma.user.findUnique({

@@ -12,7 +12,7 @@ export default function Footer() {
                 <Building2 className="w-4 h-4" />
               </div>
               <span className="font-extrabold text-xl tracking-tight text-white">
-                UNILIVE
+                GAMPÜS
               </span>
             </div>
             <p className="text-xs text-slate-400 max-w-md leading-relaxed">
@@ -29,7 +29,7 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="pt-6 flex flex-col md:flex-row items-center justify-between text-xs text-slate-500 gap-3 text-center md:text-left">
-          <p>© {new Date().getFullYear()} UNILIVE. Tüm hakları saklıdır.</p>
+          <p>© {new Date().getFullYear()} GAMPÜS. Tüm hakları saklıdır.</p>
           <p className="flex items-center justify-center gap-1">
             Üniversite öğrencileri için tasarlandı <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500 inline" />
           </p>

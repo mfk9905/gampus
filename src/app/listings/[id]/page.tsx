@@ -16,17 +16,17 @@ export async function generateMetadata({
 
   if (!listing) {
     return {
-      title: 'İlan Bulunamadı — UNILIVE',
+      title: 'İlan Bulunamadı — Gampüs',
     };
   }
 
   const priceText = `${new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY', maximumFractionDigits: 0 }).format(listing.price)}`;
 
   return {
-    title: `${listing.title} (${priceText}) | UNILIVE Öğrenci İlanı`,
+    title: `${listing.title} (${priceText}) | Gampüs Öğrenci İlanı`,
     description: `${listing.district}, İstanbul'da ${listing.title}. Kampüs yakınında doğrulanmış öğrenci ilanı.`,
     openGraph: {
-      title: `${listing.title} — UNILIVE`,
+      title: `${listing.title} — Gampüs`,
       description: `${listing.district}'de ${priceText} fiyatıyla öğrenci ilanı.`,
       images: listing.images && listing.images.length > 0 ? [listing.images[0].url] : [],
     },

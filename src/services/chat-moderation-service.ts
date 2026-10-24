@@ -118,7 +118,7 @@ export function validateChatMessage(text: string): ModerationCheckResult {
       return {
         isValid: false,
         category: 'FRAUD',
-        reason: 'UniLive üzerinde kapora, ön ödeme veya harici para transferi talepleri yasaktır.',
+        reason: 'Gampüs üzerinde kapora, ön ödeme veya harici para transferi talepleri yasaktır.',
       };
     }
   }
@@ -139,7 +139,7 @@ export function validateChatMessage(text: string): ModerationCheckResult {
     return {
       isValid: false,
       category: 'PHONE',
-      reason: 'Güvenliğiniz için mesajlaşma üzerinden doğrudan telefon numarası paylaşamazsınız. Tüm iletişimi UniLive içinden sürdürünüz.',
+      reason: 'Güvenliğiniz için mesajlaşma üzerinden doğrudan telefon numarası paylaşamazsınız. Tüm iletişimi Gampüs içinden sürdürünüz.',
     };
   }
 

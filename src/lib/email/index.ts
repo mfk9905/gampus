@@ -2,7 +2,7 @@ import { Resend } from 'resend';
 import { env } from '@/lib/env';
 
 const resendClient = env.RESEND_API_KEY ? new Resend(env.RESEND_API_KEY) : null;
-const fromEmail = env.EMAIL_FROM || 'UNILIVE <noreply@unilive.app>';
+const fromEmail = env.EMAIL_FROM || 'Gampüs <noreply@gampus.app>';
 
 export interface SendEmailResult {
   success: boolean;
@@ -62,7 +62,7 @@ export async function sendPasswordResetEmail({
   name: string;
   resetUrl: string;
 }): Promise<SendEmailResult> {
-  const subject = 'UNILIVE — Şifre Sıfırlama Talebi';
+  const subject = 'Gampüs — Şifre Sıfırlama Talebi';
   const html = `
     <!DOCTYPE html>
     <html lang="tr">
@@ -81,16 +81,16 @@ export async function sendPasswordResetEmail({
     </head>
     <body>
       <div class="card">
-        <div class="logo">UNILIVE</div>
+        <div class="logo">GAMPÜS</div>
         <h1>Şifre Sıfırlama Talebi</h1>
         <p>Merhaba ${name || 'Öğrenci'},</p>
-        <p>UNILIVE hesabınız için şifre sıfırlama talebinde bulundunuz. Aşağıdaki butona tıklayarak yeni şifrenizi belirleyebilirsiniz:</p>
+        <p>Gampüs hesabınız için şifre sıfırlama talebinde bulundunuz. Aşağıdaki butona tıklayarak yeni şifrenizi belirleyebilirsiniz:</p>
         <div style="text-align: center;">
           <a href="${resetUrl}" class="btn" target="_blank">Şifremi Sıfırla</a>
         </div>
         <p>Bu bağlantı <strong>15 dakika</strong> boyunca geçerlidir. Eğer bu talebi siz yapmadıysanız lütfen bu e-postayı dikkate almayınız; hesabınız güvendedir.</p>
         <div class="footer">
-          UNILIVE Üniversite Kampüs Yaşamı &bull; Bu otomatik bir bildirimdir.
+          Gampüs Kampüs Pazaryeri &bull; Bu otomatik bir bildirimdir.
         </div>
       </div>
     </body>
@@ -110,7 +110,7 @@ export async function sendStudentVerifiedEmail({
   to: string;
   name: string;
 }): Promise<SendEmailResult> {
-  const subject = 'UNILIVE — Öğrenci Rozetiniz Onaylandı! 🟢';
+  const subject = 'Gampüs — Öğrenci Rozetiniz Onaylandı! 🟢';
   const html = `
     <!DOCTYPE html>
     <html lang="tr">
@@ -129,14 +129,14 @@ export async function sendStudentVerifiedEmail({
     </head>
     <body>
       <div class="card">
-        <div class="logo">UNILIVE</div>
+        <div class="logo">GAMPÜS</div>
         <div class="badge">🟢 Doğrulandı</div>
         <h1>Öğrenci Doğrulamanız Tamamlandı!</h1>
         <p>Tebrikler ${name},</p>
         <p>Üniversite e-postanız (.edu.tr) başarıyla doğrulandı. Profilinize ve ilanlarınıza <strong>Doğrulanmış Öğrenci</strong> rozeti eklendi.</p>
         <p>Artık kampüs içi ev arkadaşı ararken veya 2. el eşya alım-satımında diğer öğrencilere tam güven sağlayabilirsiniz.</p>
         <div class="footer">
-          UNILIVE &bull; Üniversite Topluluğu Güven Sistemi
+          Gampüs &bull; Üniversite Topluluğu Güven Sistemi
         </div>
       </div>
     </body>
@@ -158,7 +158,7 @@ export async function sendStudentOtpEmail({
   name: string;
   otp: string;
 }): Promise<SendEmailResult> {
-  const subject = `UNILIVE — Öğrenci Doğrulama Kodunuz: ${otp}`;
+  const subject = `Gampüs — Öğrenci Doğrulama Kodunuz: ${otp}`;
   const html = `
     <!DOCTYPE html>
     <html lang="tr">
@@ -177,14 +177,14 @@ export async function sendStudentOtpEmail({
     </head>
     <body>
       <div class="card">
-        <div class="logo">UNILIVE</div>
+        <div class="logo">GAMPÜS</div>
         <h1>Öğrenci Rozeti Doğrulama Kodu</h1>
         <p>Merhaba ${name || 'Öğrenci'},</p>
-        <p>UNILIVE hesabınıza <strong>Doğrulanmış Öğrenci Rozeti</strong> tanımlamak için tek kullanımlık doğrulama kodunuz:</p>
+        <p>Gampüs hesabınıza <strong>Doğrulanmış Öğrenci Rozeti</strong> tanımlamak için tek kullanımlık doğrulama kodunuz:</p>
         <div class="code">${otp}</div>
         <p>Bu kod <strong>10 dakika</strong> süreyle geçerlidir. Eğer bu işlemi siz talep etmediyseniz lütfen bu e-postayı dikkate almayınız.</p>
         <div class="footer">
-          UNILIVE &bull; Üniversite Kampüs Yaşamı Güven Sistemi
+          Gampüs &bull; Üniversite Kampüs Yaşamı Güven Sistemi
         </div>
       </div>
     </body>

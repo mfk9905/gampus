@@ -164,6 +164,7 @@ export default function MessagesClient({
             refreshConversationsList();
 
             // Refresh navbar unread badge
+            window.dispatchEvent(new CustomEvent('gampus:refresh-unread'));
             window.dispatchEvent(new CustomEvent('unilive:refresh-unread'));
           }
         } catch {
@@ -202,6 +203,7 @@ export default function MessagesClient({
           playNotificationSound();
           // Current user is viewing this conversation; mark as read immediately on server
           fetch(`/api/messages/conversations/${activeId}`, { method: 'PATCH' }).then(() => {
+            window.dispatchEvent(new CustomEvent('gampus:refresh-unread'));
             window.dispatchEvent(new CustomEvent('unilive:refresh-unread'));
           });
         }
@@ -218,6 +220,7 @@ export default function MessagesClient({
       );
 
       // Refresh navbar unread badge immediately
+      window.dispatchEvent(new CustomEvent('gampus:refresh-unread'));
       window.dispatchEvent(new CustomEvent('unilive:refresh-unread'));
     };
 
@@ -271,6 +274,7 @@ export default function MessagesClient({
         );
 
         // Notify Navbar to update message badge
+        window.dispatchEvent(new CustomEvent('gampus:refresh-unread'));
         window.dispatchEvent(new CustomEvent('unilive:refresh-unread'));
       }
     } catch (e) {
@@ -595,7 +599,7 @@ export default function MessagesClient({
                         {activeConvMeta.blockStatus?.isBlocked ? (
                           <span className="text-rose-600 font-bold">Engellendi</span>
                         ) : (
-                          activeConvMeta.listing?.title || 'UniLive Güvenli Sohbet'
+                          activeConvMeta.listing?.title || 'Gampüs Güvenli Sohbet'
                         )}
                       </p>
                     </div>

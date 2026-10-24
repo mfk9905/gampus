@@ -1,13 +1,13 @@
-# UNILIVE
+# GAMPÜS
 
 > **Öğrenciden Öğrenciye Güvenli ve Ekonomik Kampüs Yaşamı**
-> *“Öğrencinin taşınma ve ev devir uygulaması.”*
+> *“Öğrencinin taşınma, ev ve eşya devir pazaryeri.”*
 
 ---
 
 ## 🚀 Proje Hakkında
 
-UNILIVE, üniversite öğrencilerinin:
+GAMPÜS, üniversite öğrencilerinin:
 - Kiralık ev ve studio daireler bulmasını,
 - Bütçesine uygun kiralık oda bulmasını,
 - Uyumlu ev arkadaşı bulmasını,

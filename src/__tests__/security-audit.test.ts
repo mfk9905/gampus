@@ -10,7 +10,7 @@ function assert(condition: boolean, message: string) {
 }
 
 async function runSecurityAuditTests() {
-  console.log('🔒 Starting UNILIVE Production Security Audit Tests...\n');
+  console.log('🔒 Starting Gampüs Production Security Audit Tests...\n');
 
   // ==========================================
   // 1. AUTH & JWT SECURITY TESTS

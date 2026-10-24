@@ -3,7 +3,7 @@ import { calculateRoommateMatch } from '../services/matchmaking-service';
 import { validateChatMessage } from '../services/chat-moderation-service';
 
 function runTests() {
-  console.log('🧪 Starting UNILIVE V2 Business Logic Tests...\n');
+  console.log('🧪 Starting Gampüs V2 Business Logic Tests...\n');
 
   // Test 1: Moderation Risk Evaluation
   console.log('1. Testing Moderation Risk Evaluation...');

@@ -1,13 +1,13 @@
-# 🤖 AGENT.md — UNILIVE AI Ajan & Geliştirici Kılavuzu
+# 🤖 AGENT.md — GAMPÜS AI Ajan & Geliştirici Kılavuzu
 
-> **Bu belge, UNILIVE projesinde görev alacak tüm yapay zeka ajanları (ve geliştiriciler) için tek yetkili operasyonel, mimari ve kural kılavuzudur.**  
+> **Bu belge, GAMPÜS projesinde görev alacak tüm yapay zeka ajanları (ve geliştiriciler) için tek yetkili operasyonel, mimari ve kural kılavuzudur.**  
 > Projede kod yazmadan veya değişiklik yapmadan önce bu belgedeki kuralları, mimari kararları ve iş mantığını eksiksiz kavrayınız.
 
 ---
 
 ## 1. 📌 Proje Özeti ve Temel Vizyon
 
-- **Proje Adı:** UNILIVE
+- **Proje Adı:** GAMPÜS (Gampüs)
 - **Slogan:** *"Öğrenciden Öğrenciye Güvenli Kampüs Pazaryeri"*
 - **Amaç:** Üniversite öğrencilerinin kiralık ev, oda, ev arkadaşı bulmasını ve 2. el eşyalarını (mobilya, beyaz eşya, kitap) komisyonsuz, aracısız ve güvenli bir şekilde birbirlerine aktarmasını sağlayan doğrulanmış kampüs platformu.
 - **Hedef Kitle:** Türkiye'deki üniversite öğrencileri (`.edu.tr` doğrulamalı).

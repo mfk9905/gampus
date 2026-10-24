@@ -5,8 +5,8 @@ import Footer from '@/components/footer/Footer';
 import { env } from '@/lib/env';
 
 export const metadata: Metadata = {
-  metadataBase: new URL(env.NEXT_PUBLIC_APP_URL || 'https://unilive.app'),
-  title: 'UNILIVE — Öğrenciden Öğrenciye Güvenli ve Ekonomik Kampüs Yaşamı',
+  metadataBase: new URL(env.NEXT_PUBLIC_APP_URL || 'https://gampus.app'),
+  title: 'GAMPÜS — Öğrenciden Öğrenciye Güvenli Kampüs Pazaryeri',
   description:
     'Üniversite öğrencileri için kiralık ev, oda, ev arkadaşı ve ikinci el eşya platformu. Kampüsüne yakın ilanları keşfet, doğrulanmış öğrencilerle iletişime geç.',
   keywords: [
@@ -16,17 +16,19 @@ export const metadata: Metadata = {
     'ikinci el eşya',
     'İTÜ kiralık ev',
     'Kadıköy öğrenci evi',
-    'UNILIVE',
+    'kampüs pazaryeri',
+    'GAMPÜS',
+    'Gampüs',
   ],
   openGraph: {
-    title: 'UNILIVE — Kampüs Yaşamı & Öğrenci İlan Platformu',
+    title: 'GAMPÜS — Kampüs Yaşamı & Öğrenci İlan Platformu',
     description: 'Öğrenciden öğrenciye güvenli kampüs pazaryeri. Evini bul, ev arkadaşını seç, eşyaları uygun fiyata güvenle al.',
-    siteName: 'UNILIVE',
+    siteName: 'Gampüs',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'UNILIVE — Kampüs Yaşamı & Öğrenci İlan Platformu',
+    title: 'GAMPÜS — Kampüs Yaşamı & Öğrenci İlan Platformu',
     description: 'Öğrenciden öğrenciye güvenli ve ekonomik kampüs yaşamı.',
   },
 };

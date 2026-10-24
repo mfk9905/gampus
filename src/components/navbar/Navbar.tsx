@@ -83,8 +83,12 @@ export default function Navbar() {
       fetchNotifications();
       fetchUnreadMessages();
     };
+    window.addEventListener('gampus:refresh-unread', handleRefresh);
     window.addEventListener('unilive:refresh-unread', handleRefresh);
-    return () => window.removeEventListener('unilive:refresh-unread', handleRefresh);
+    return () => {
+      window.removeEventListener('gampus:refresh-unread', handleRefresh);
+      window.removeEventListener('unilive:refresh-unread', handleRefresh);
+    };
   }, []);
 
   const handleNotificationClick = async (notif: any) => {
@@ -179,16 +183,16 @@ export default function Navbar() {
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <Link href="/" className="flex items-center space-x-2 group">
-              <div className="w-9 h-9 rounded-xl bg-teal-600 flex items-center justify-center text-white font-bold text-lg shadow-sm">
-                U
+              <div className="w-9 h-9 rounded-xl bg-teal-600 flex items-center justify-center text-white font-black text-xl shadow-sm tracking-tighter">
+                G
               </div>
               <div className="flex flex-col">
-                <span className="font-bold text-lg tracking-tight text-slate-900 flex items-center gap-1">
-                  UNILIVE
+                <span className="font-extrabold text-lg tracking-tight text-slate-900 flex items-center gap-1">
+                  GAMPÜS
                   <span className="w-2 h-2 rounded-full bg-teal-500"></span>
                 </span>
                 <span className="text-[10px] text-slate-500 font-medium -mt-1 tracking-wide uppercase">
-                  Kampüs Yaşamı
+                  Kampüs Pazaryeri
                 </span>
               </div>
             </Link>

@@ -44,14 +44,14 @@ export async function verifyToken(token: string): Promise<UserSessionPayload | n
 
 export async function getCurrentUser(): Promise<UserSessionPayload | null> {
   const cookieStore = await cookies();
-  const token = cookieStore.get('unilive_token')?.value;
+  const token = cookieStore.get('gampus_token')?.value || cookieStore.get('unilive_token')?.value;
   if (!token) return null;
   return await verifyToken(token);
 }
 
 export async function setAuthCookie(token: string) {
   const cookieStore = await cookies();
-  cookieStore.set('unilive_token', token, {
+  cookieStore.set('gampus_token', token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
@@ -62,5 +62,6 @@ export async function setAuthCookie(token: string) {
 
 export async function removeAuthCookie() {
   const cookieStore = await cookies();
+  cookieStore.delete('gampus_token');
   cookieStore.delete('unilive_token');
 }

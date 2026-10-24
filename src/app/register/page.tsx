@@ -159,7 +159,7 @@ function RegisterForm() {
           <div className="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-2xl flex items-center justify-center mx-auto">
             <Building2 className="w-6 h-6" />
           </div>
-          <h1 className="text-2xl font-bold text-slate-900">UNILIVE Öğrenci Kaydı</h1>
+          <h1 className="text-2xl font-bold text-slate-900">Gampüs Öğrenci Kaydı</h1>
           <p className="text-xs text-slate-500">
             Üniversite topluluğuna katıl, güvenle ev, oda ve eşya paylaş.
           </p>

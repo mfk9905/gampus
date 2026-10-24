@@ -451,14 +451,14 @@ export default function ProfileClient({ user }: ProfileClientProps) {
               İletişim & Gizlilik Tercihleri
             </h3>
             <p className="text-xs text-slate-500">
-              UniLive üzerindeki ilanlarınızda telefon numaranızın nasıl görüneceğini belirleyin.
+              Gampüs üzerindeki ilanlarınızda telefon numaranızın nasıl görüneceğini belirleyin.
             </p>
 
             <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex items-center justify-between gap-4">
               <div>
                 <span className="block text-sm font-bold text-slate-800">Beni Telefonla Arayabilsinler</span>
                 <span className="block text-xs text-slate-500 mt-0.5">
-                  Açık olduğunda ilanlarınızda telefon numaranız görünür. Kapalıyken numaranız tamamen gizlenir ve öğrenciler sizinle sadece UniLive mesajlaşması üzerinden iletişim kurabilir.
+                  Açık olduğunda ilanlarınızda telefon numaranız görünür. Kapalıyken numaranız tamamen gizlenir ve öğrenciler sizinle sadece Gampüs mesajlaşması üzerinden iletişim kurabilir.
                 </span>
               </div>
               <label className="relative inline-flex items-center cursor-pointer shrink-0">

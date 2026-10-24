@@ -100,7 +100,7 @@ function LoginForm() {
           <div className="w-12 h-12 bg-teal-100 text-teal-700 rounded-2xl flex items-center justify-center mx-auto">
             <Building2 className="w-6 h-6" />
           </div>
-          <h1 className="text-2xl font-bold text-slate-900">UNILIVE Giriş Yap</h1>
+          <h1 className="text-2xl font-bold text-slate-900">Gampüs Giriş Yap</h1>
           <p className="text-xs text-slate-500">
             Kampüs ilanlarına ve favorilerine erişmek için giriş yap.
           </p>

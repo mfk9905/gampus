@@ -296,11 +296,11 @@ export default async function HomePage({
           <ListingGrid listings={featuredListings} />
         </section>
 
-        {/* UNILIVE TRUST SYSTEM SECTION (Requirement #14) */}
+        {/* GAMPÜS TRUST SYSTEM SECTION */}
         <section className="bg-white border border-slate-200 rounded-3xl p-8 space-y-8">
           <div className="text-center max-w-xl mx-auto">
             <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">
-              UNILIVE Güven Sistemi
+              Gampüs Güven Sistemi
             </h2>
             <p className="text-xs text-slate-500 mt-1">
               Öğrencilerin güvenliğini ve şeffaflığı ön planda tutan altyapı
