@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import { prisma } from '@/lib/db/prisma';
 import { ListingCategory, ListingStatus, Condition, Prisma } from '@prisma/client';
 import { calculateDistance } from '@/lib/utils/distance';
@@ -227,7 +228,7 @@ export async function countListings(filters: ListingFilterOptions = {}) {
   return await prisma.listing.count({ where });
 }
 
-export async function getListingById(id: string, currentUserId?: string) {
+export const getListingById = cache(async (id: string, currentUserId?: string) => {
   const listing = await prisma.listing.findUnique({
     where: { id },
     include: {
@@ -273,7 +274,7 @@ export async function getListingById(id: string, currentUserId?: string) {
     distanceKm,
     isFavorited: currentUserId ? (listing.favorites && listing.favorites.length > 0) : false,
   };
-}
+});
 
 export async function createListing(userId: string, data: {
   category: ListingCategory;

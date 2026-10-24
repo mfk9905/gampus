@@ -7,7 +7,7 @@ import { ListingCategory, Condition, ListingStatus } from '@prisma/client';
 import { Compass, Filter, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 
-export const revalidate = 0;
+export const revalidate = 30; // ISR cache for 30s
 
 const PAGE_SIZE = 24;
 

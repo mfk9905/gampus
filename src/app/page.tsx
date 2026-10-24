@@ -23,7 +23,7 @@ import {
   Compass
 } from 'lucide-react';
 
-export const revalidate = 0; // Dynamic server rendering
+export const revalidate = 60; // ISR - Cache at Edge for 60 seconds (sub-50ms instant response)
 
 export default async function HomePage({
   searchParams,
@@ -33,16 +33,15 @@ export default async function HomePage({
   const { uniId } = await searchParams;
   const session = await getCurrentUser();
 
-  const [universities, totalActiveListingsCount, totalUniversitiesCount] = await Promise.all([
-    getAllUniversities(),
-    prisma.listing.count({ where: { status: 'ACTIVE' } }),
-    prisma.university.count(),
-  ]);
+  const [universities, totalActiveListingsCount, totalUniversitiesCount, featuredListings] =
+    await Promise.all([
+      getAllUniversities(),
+      prisma.listing.count({ where: { status: 'ACTIVE' } }),
+      prisma.university.count(),
+      getListings({ featured: true, limit: 8 }, session?.id),
+    ]);
 
   const selectedUni = uniId ? universities.find((u) => u.id === uniId) : universities[0];
-
-  // Fetch featured listings
-  const featuredListings = await getListings({ featured: true, limit: 8 }, session?.id);
 
   // Fetch campus-specific listings
   const campusListings = await getListings(
