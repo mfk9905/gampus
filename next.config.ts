@@ -4,9 +4,9 @@ const cspHeader = `
   default-src 'self';
   script-src 'self' 'unsafe-eval' 'unsafe-inline' https://challenges.cloudflare.com;
   style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-  img-src 'self' blob: data: https://images.unsplash.com https://res.cloudinary.com;
+  img-src 'self' blob: data: https://images.unsplash.com https://res.cloudinary.com https://*.google.com https://*.googleapis.com https://*.arcgisonline.com https://*.openstreetmap.org https://*.cartocdn.com;
   font-src 'self' data: https://fonts.gstatic.com;
-  connect-src 'self' https://*.pusher.com wss://*.pusher.com https://*.sentry.io https://res.cloudinary.com https://api.resend.com;
+  connect-src 'self' https://*.pusher.com wss://*.pusher.com https://*.sentry.io https://res.cloudinary.com https://api.resend.com https://*.google.com https://*.arcgisonline.com https://*.openstreetmap.org;
   frame-ancestors 'none';
   form-action 'self';
   base-uri 'self';

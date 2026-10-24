@@ -467,7 +467,7 @@ export default function CreateListingPage() {
           <div className="space-y-4">
             <div>
               <div className="flex justify-between items-center mb-1.5">
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                <label htmlFor="listing-title" className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
                   İlan Başlığı *
                 </label>
                 <span className={`text-[11px] ${title.trim().length >= 5 ? 'text-emerald-600 font-semibold' : 'text-slate-400'}`}>
@@ -475,6 +475,8 @@ export default function CreateListingPage() {
                 </span>
               </div>
               <input
+                id="listing-title"
+                name="title"
                 type="text"
                 value={title}
                 onChange={(e) => {
@@ -489,10 +491,12 @@ export default function CreateListingPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                <label htmlFor="listing-price" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                   Fiyat (₺) *
                 </label>
                 <input
+                  id="listing-price"
+                  name="price"
                   type="number"
                   value={price}
                   onChange={(e) => {
@@ -506,10 +510,12 @@ export default function CreateListingPage() {
 
               {(category === 'FURNITURE' || category === 'HOUSE_PACKAGE') && (
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  <label htmlFor="listing-condition" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                     Eşya Durumu
                   </label>
                   <select
+                    id="listing-condition"
+                    name="condition"
                     value={condition}
                     onChange={(e) => setCondition(e.target.value as any)}
                     className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-base sm:text-sm text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:outline-hidden"
@@ -524,7 +530,7 @@ export default function CreateListingPage() {
 
             <div>
               <div className="flex justify-between items-center mb-1.5">
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                <label htmlFor="listing-description" className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
                   Açıklama *
                 </label>
                 <span className={`text-[11px] font-semibold ${description.trim().length >= 10 ? 'text-emerald-600' : 'text-amber-600'}`}>
@@ -534,6 +540,8 @@ export default function CreateListingPage() {
                 </span>
               </div>
               <textarea
+                id="listing-description"
+                name="description"
                 rows={4}
                 value={description}
                 onChange={(e) => {
@@ -588,10 +596,12 @@ export default function CreateListingPage() {
 
           <div className="space-y-4">
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+              <label htmlFor="listing-university" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                 Yakın Olduğu Üniversite / Kampüs *
               </label>
               <select
+                id="listing-university"
+                name="universityId"
                 value={universityId}
                 onChange={(e) => {
                   setUniversityId(e.target.value);
@@ -609,10 +619,12 @@ export default function CreateListingPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                <label htmlFor="listing-district" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                   İlçe *
                 </label>
                 <select
+                  id="listing-district"
+                  name="district"
                   value={district}
                   onChange={(e) => {
                     handleDistrictChange(e.target.value);
@@ -629,10 +641,12 @@ export default function CreateListingPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                <label htmlFor="listing-neighborhood" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                   Semt / Mahalle *
                 </label>
                 <select
+                  id="listing-neighborhood"
+                  name="neighborhood"
                   value={neighborhood}
                   onChange={(e) => {
                     handleNeighborhoodChange(e.target.value);
@@ -650,10 +664,12 @@ export default function CreateListingPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+              <label htmlFor="listing-location-text" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                 Açık Adres / Konum Detayı (İsteğe Bağlı)
               </label>
               <input
+                id="listing-location-text"
+                name="locationText"
                 type="text"
                 value={locationText}
                 maxLength={200}
@@ -728,6 +744,7 @@ export default function CreateListingPage() {
             <input
               type="file"
               id="file-upload"
+              name="file"
               accept="image/jpeg,image/png,image/webp"
               onChange={handleFileUpload}
               disabled={uploading || images.length >= 10}
@@ -811,7 +828,12 @@ export default function CreateListingPage() {
             </div>
 
             <div className="flex gap-2 pt-1">
+              <label htmlFor="custom-image-url" className="sr-only">
+                Görsel Web Bağlantısı
+              </label>
               <input
+                id="custom-image-url"
+                name="customImageUrl"
                 type="text"
                 placeholder="Görsel web adresi yapıştırın (https://...)"
                 value={customImageUrl}
@@ -882,13 +904,17 @@ export default function CreateListingPage() {
           {/* Phone call permission toggle */}
           <div className="bg-slate-50 border border-slate-200/90 rounded-2xl p-4 flex items-center justify-between gap-4">
             <div>
-              <span className="block text-sm font-bold text-slate-800">Beni Telefonla Arayabilsinler</span>
+              <label htmlFor="allow-phone-calls" className="block text-sm font-bold text-slate-800 cursor-pointer">
+                Beni Telefonla Arayabilsinler
+              </label>
               <span className="block text-xs text-slate-500 mt-0.5">
                 Açık olursa ilanınızda &quot;Telefonu Göster&quot; butonu yer alır. Kapalı tutarsanız öğrenciler yalnızca Gampüs üzerinden mesajlaşabilir.
               </span>
             </div>
-            <label className="relative inline-flex items-center cursor-pointer shrink-0">
+            <label htmlFor="allow-phone-calls" className="relative inline-flex items-center cursor-pointer shrink-0">
               <input
+                id="allow-phone-calls"
+                name="allowPhoneCalls"
                 type="checkbox"
                 checked={allowPhoneCalls}
                 onChange={(e) => setAllowPhoneCalls(e.target.checked)}
