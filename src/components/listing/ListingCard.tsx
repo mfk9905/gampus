@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Heart, MapPin, GraduationCap, ShieldCheck, Sparkles, Navigation } from 'lucide-react';
-import { formatDistance } from '@/lib/utils/distance';
+import { formatDistance, getTransitFromDistanceKm } from '@/lib/utils/distance';
 
 export interface ListingCardProps {
   listing: {
@@ -187,12 +187,18 @@ export default function ListingCard({ listing, onFavoriteToggle }: ListingCardPr
               <div></div>
             )}
 
-            {listing.distanceKm !== undefined && listing.distanceKm !== null && (
-              <div className="flex items-center gap-1 text-emerald-700 font-semibold bg-emerald-50/80 px-2 py-0.5 rounded-md text-[11px]">
-                <Navigation className="w-3 h-3 text-emerald-600" />
-                <span>Kampüse {formatDistance(listing.distanceKm)}</span>
-              </div>
-            )}
+            {listing.distanceKm !== undefined && listing.distanceKm !== null && (() => {
+              const transit = getTransitFromDistanceKm(listing.distanceKm);
+              return (
+                <div
+                  className="flex items-center gap-1 text-emerald-700 font-semibold bg-emerald-50/90 border border-emerald-200/50 px-2 py-0.5 rounded-md text-[11px]"
+                  title={`Kampüse: ${transit.fullLabel}`}
+                >
+                  <span>{transit.icon}</span>
+                  <span>{transit.badgeLabel}</span>
+                </div>
+              );
+            })()}
           </div>
         </div>
       </div>

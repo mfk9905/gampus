@@ -22,10 +22,12 @@ import {
   Rocket,
   CheckCircle2,
   Package,
-  Edit3
+  Edit3,
+  Maximize2
 } from 'lucide-react';
 import ReportModal from '@/components/report/ReportModal';
-import { formatDistance } from '@/lib/utils/distance';
+import ListingLightbox from '@/components/gallery/ListingLightbox';
+import { formatDistance, getSmartTransitInfo, getTransitFromDistanceKm } from '@/lib/utils/distance';
 import { PREMIUM_TIERS } from '@/config/constants';
 
 interface ListingDetailClientProps {
@@ -62,6 +64,9 @@ export default function ListingDetailClient({ listing, currentUserId }: ListingD
   const [boostLoading, setBoostLoading] = useState(false);
   const [boostMessage, setBoostMessage] = useState('');
 
+  // Fullscreen Lightbox State
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+
   const isOwner = Boolean(currentUserId && listing.userId === currentUserId);
   const allowsPhone = Boolean(listing.allowPhoneCalls ?? listing.user?.allowPhoneCalls);
   const isInactive = listing.status !== 'ACTIVE';
@@ -69,6 +74,12 @@ export default function ListingDetailClient({ listing, currentUserId }: ListingD
   const images = listing.images && listing.images.length > 0
     ? listing.images
     : [{ url: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&auto=format&fit=crop&q=80' }];
+
+  const transitInfo = (listing.latitude && listing.longitude && listing.university?.latitude && listing.university?.longitude)
+    ? getSmartTransitInfo(listing.latitude, listing.longitude, listing.university.latitude, listing.university.longitude)
+    : (listing.distanceKm !== null && listing.distanceKm !== undefined)
+    ? getTransitFromDistanceKm(listing.distanceKm)
+    : null;
 
   const formattedPrice = new Intl.NumberFormat('tr-TR', {
     style: 'currency',
@@ -205,12 +216,28 @@ export default function ListingDetailClient({ listing, currentUserId }: ListingD
         <div className="lg:col-span-2 space-y-8">
           {/* Photo Gallery */}
           <div className="bg-white rounded-3xl border border-slate-200 p-4 shadow-xs space-y-4">
-            <div className="relative aspect-[16/10] w-full rounded-2xl overflow-hidden bg-slate-900 group">
+            <div
+              onClick={() => setIsLightboxOpen(true)}
+              className="relative aspect-[16/10] w-full rounded-2xl overflow-hidden bg-slate-900 group cursor-pointer"
+            >
               <img
                 src={images[selectedImgIndex].url}
                 alt={listing.title}
-                className="w-full h-full object-cover transition-all duration-300"
+                className="w-full h-full object-cover transition-all duration-300 group-hover:scale-[1.02]"
               />
+
+              {/* Fullscreen Hint Badge */}
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsLightboxOpen(true);
+                }}
+                className="absolute bottom-3 right-3 bg-slate-900/80 hover:bg-slate-900 text-white text-xs font-semibold px-3 py-1.5 rounded-xl shadow-lg backdrop-blur-md flex items-center gap-1.5 transition-all opacity-90 hover:opacity-100 z-10"
+              >
+                <Maximize2 className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Büyük Gör ({selectedImgIndex + 1}/{images.length})</span>
+              </button>
 
               {listing.featured && (
                 <div className="absolute top-4 left-4 bg-amber-500 text-white font-bold text-xs px-3 py-1.5 rounded-xl shadow-lg flex items-center gap-1">
@@ -301,7 +328,15 @@ export default function ListingDetailClient({ listing, currentUserId }: ListingD
                   {listing.university?.shortName || 'Tüm Kampüsler'}
                 </span>
               </div>
-              {listing.distanceKm !== null && listing.distanceKm !== undefined && (
+              {transitInfo ? (
+                <div>
+                  <span className="text-xs font-bold uppercase text-slate-400 block">Kampüse Ulaşım</span>
+                  <span className="font-bold text-teal-700 flex items-center gap-1.5 mt-0.5" title={transitInfo.fullLabel}>
+                    <span className="text-base">{transitInfo.icon}</span>
+                    <span>{transitInfo.fullLabel}</span>
+                  </span>
+                </div>
+              ) : listing.distanceKm !== null && listing.distanceKm !== undefined ? (
                 <div>
                   <span className="text-xs font-bold uppercase text-slate-400 block">Kampüse Mesafe</span>
                   <span className="font-bold text-teal-700 flex items-center gap-1 mt-0.5">
@@ -309,7 +344,7 @@ export default function ListingDetailClient({ listing, currentUserId }: ListingD
                     {formatDistance(listing.distanceKm)}
                   </span>
                 </div>
-              )}
+              ) : null}
             </div>
 
             {/* Package Items Section if present */}
@@ -609,6 +644,15 @@ export default function ListingDetailClient({ listing, currentUserId }: ListingD
         listingTitle={listing.title}
         isOpen={isReportModalOpen}
         onClose={() => setIsReportModalOpen(false)}
+      />
+
+      {/* Fullscreen Touch Lightbox */}
+      <ListingLightbox
+        images={images}
+        initialIndex={selectedImgIndex}
+        isOpen={isLightboxOpen}
+        onClose={() => setIsLightboxOpen(false)}
+        title={listing.title}
       />
     </div>
   );

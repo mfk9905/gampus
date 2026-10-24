@@ -19,13 +19,27 @@ import {
   Lock,
   LogIn
 } from 'lucide-react';
+import dynamic from 'next/dynamic';
 import ListingCard from '@/components/listing/ListingCard';
+import { ISTANBUL_DISTRICTS, getDistrictByName } from '@/config/locations';
+import { calculateDistance } from '@/lib/utils/distance';
+
+const LocationPickerMap = dynamic(() => import('@/components/location/LocationPickerMap'), {
+  ssr: false,
+  loading: () => (
+    <div className="h-64 sm:h-72 w-full rounded-2xl bg-slate-100 animate-pulse flex items-center justify-center text-slate-400 text-xs">
+      Harita yükleniyor...
+    </div>
+  ),
+});
 
 interface University {
   id: string;
   name: string;
   shortName: string;
   district: string;
+  latitude: number;
+  longitude: number;
 }
 
 const SAMPLE_MOCK_IMAGES = [
@@ -50,13 +64,42 @@ export default function CreateListingPage() {
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
   const [district, setDistrict] = useState('Kadıköy');
-  const [locationText, setLocationText] = useState('Kadıköy Merkez, Moda Sahil yakınında');
+  const [neighborhood, setNeighborhood] = useState('Moda / Caferağa');
+  const [locationText, setLocationText] = useState('');
+  const [latitude, setLatitude] = useState(40.9841);
+  const [longitude, setLongitude] = useState(29.0267);
   const [universityId, setUniversityId] = useState('');
   const [condition, setCondition] = useState<'NEW' | 'GOOD' | 'USED'>('GOOD');
   const [allowPhoneCalls, setAllowPhoneCalls] = useState(false);
   const [images, setImages] = useState<string[]>([SAMPLE_MOCK_IMAGES[0]]);
   const [customImageUrl, setCustomImageUrl] = useState('');
   const [uploading, setUploading] = useState(false);
+
+  const handleDistrictChange = (newDistrictName: string) => {
+    setDistrict(newDistrictName);
+    const found = getDistrictByName(newDistrictName);
+    if (found) {
+      if (found.neighborhoods.length > 0) {
+        setNeighborhood(found.neighborhoods[0].name);
+        setLatitude(found.neighborhoods[0].lat);
+        setLongitude(found.neighborhoods[0].lng);
+      } else {
+        setNeighborhood('');
+        setLatitude(found.defaultLat);
+        setLongitude(found.defaultLng);
+      }
+    }
+  };
+
+  const handleNeighborhoodChange = (newNeighborhoodName: string) => {
+    setNeighborhood(newNeighborhoodName);
+    const foundDistrict = getDistrictByName(district);
+    const foundNeigh = foundDistrict?.neighborhoods.find((n) => n.name === newNeighborhoodName);
+    if (foundNeigh) {
+      setLatitude(foundNeigh.lat);
+      setLongitude(foundNeigh.lng);
+    }
+  };
 
   useEffect(() => {
     checkAuthAndFetchUniversities();
@@ -188,6 +231,8 @@ export default function CreateListingPage() {
     setLoading(true);
 
     try {
+      const combinedLocationText = [neighborhood, locationText].filter(Boolean).join(' • ');
+
       const res = await fetch('/api/listings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -197,10 +242,10 @@ export default function CreateListingPage() {
           description,
           price: Number(price),
           district,
-          locationText,
+          locationText: combinedLocationText || district,
           universityId,
-          latitude: 41.0082,
-          longitude: 28.9784,
+          latitude: Number(latitude.toFixed(6)),
+          longitude: Number(longitude.toFixed(6)),
           condition: category === 'FURNITURE' || category === 'HOUSE_PACKAGE' ? condition : undefined,
           images: images.length > 0 ? images : [SAMPLE_MOCK_IMAGES[0]],
           allowPhoneCalls,
@@ -522,36 +567,72 @@ export default function CreateListingPage() {
                 <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
                   İlçe *
                 </label>
-                <input
-                  type="text"
+                <select
                   value={district}
-                  maxLength={50}
                   onChange={(e) => {
-                    setDistrict(e.target.value);
+                    handleDistrictChange(e.target.value);
                     if (error) setError('');
                   }}
-                  placeholder="Örn: Kadıköy, Beşiktaş, Maslak"
-                  className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-sm text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:outline-hidden"
-                />
+                  className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-sm text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:outline-hidden font-medium"
+                >
+                  {ISTANBUL_DISTRICTS.map((d) => (
+                    <option key={d.name} value={d.name}>
+                      {d.name}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                  Adres Özeti / Konum Detayı
+                  Semt / Mahalle *
                 </label>
-                <input
-                  type="text"
-                  value={locationText}
-                  maxLength={200}
+                <select
+                  value={neighborhood}
                   onChange={(e) => {
-                    setLocationText(e.target.value);
+                    handleNeighborhoodChange(e.target.value);
                     if (error) setError('');
                   }}
-                  placeholder="Örn: Moda caddesi, kampüse 10 dk yürüme"
-                  className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-sm text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:outline-hidden"
-                />
+                  className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-sm text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:outline-hidden font-medium"
+                >
+                  {getDistrictByName(district)?.neighborhoods.map((n) => (
+                    <option key={n.name} value={n.name}>
+                      {n.name}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
+
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                Açık Adres / Konum Detayı (İsteğe Bağlı)
+              </label>
+              <input
+                type="text"
+                value={locationText}
+                maxLength={200}
+                onChange={(e) => {
+                  setLocationText(e.target.value);
+                  if (error) setError('');
+                }}
+                placeholder="Örn: Moda caddesi, tramvaya 2 dk, market karşısı..."
+                className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-sm text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:outline-hidden"
+              />
+            </div>
+
+            {/* Interactive Leaflet Map with Pin & Live Campus Distance */}
+            <LocationPickerMap
+              latitude={latitude}
+              longitude={longitude}
+              campusLat={selectedUni?.latitude}
+              campusLng={selectedUni?.longitude}
+              campusName={selectedUni?.shortName || selectedUni?.name}
+              onChange={(newLat, newLng) => {
+                setLatitude(newLat);
+                setLongitude(newLng);
+              }}
+            />
           </div>
 
           <div className="flex items-center justify-between pt-4">
@@ -715,14 +796,16 @@ export default function CreateListingPage() {
                 price: Number(price) || 0,
                 category,
                 district,
-                locationText,
+                locationText: [neighborhood, locationText].filter(Boolean).join(' • ') || district,
                 status: 'ACTIVE',
                 condition,
                 featured: false,
                 university: selectedUni ? { name: selectedUni.name, shortName: selectedUni.shortName } : null,
                 user: { name: 'Siz (Öğrenci)', studentVerified: true },
                 images: images.map((url) => ({ url })),
-                distanceKm: 1.2,
+                distanceKm: (selectedUni && selectedUni.latitude && selectedUni.longitude && latitude && longitude)
+                  ? calculateDistance(latitude, longitude, selectedUni.latitude, selectedUni.longitude)
+                  : 1.2,
               }}
             />
           </div>

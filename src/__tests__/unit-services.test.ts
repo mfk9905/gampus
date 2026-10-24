@@ -1,6 +1,7 @@
 import { evaluateListingRisk } from '../services/moderation-service';
 import { calculateRoommateMatch } from '../services/matchmaking-service';
 import { validateChatMessage } from '../services/chat-moderation-service';
+import { calculateDistance, formatDistance, getSmartTransitInfo, getTransitFromDistanceKm } from '../lib/utils/distance';
 
 function runTests() {
   console.log('🧪 Starting Gampüs V2 Business Logic Tests...\n');
@@ -42,6 +43,24 @@ function runTests() {
   const profanityMsg = validateChatMessage('sen ne salak adamsın ya');
   console.assert(profanityMsg.isValid === false && profanityMsg.category === 'PROFANITY', 'Profanity must be rejected');
   console.log('  ✅ Chat Censorship & Anti-Fraud Tests Passed!\n');
+
+  // Test 4: Distance & Smart Transit Calculation
+  console.log('4. Testing Campus Transit & Distance Calculations...');
+  // Kadıköy Moda to İTÜ Maslak
+  const airDist = calculateDistance(40.9841, 29.0267, 41.1053, 29.0234);
+  console.assert(airDist > 10 && airDist < 16, `Air distance should be ~13.5km, got ${airDist}`);
+
+  const transit = getSmartTransitInfo(40.9841, 29.0267, 41.1053, 29.0234);
+  console.assert(transit.transitType === 'METRO', 'Long distance must classify as METRO transit');
+  console.assert(transit.icon === '🚇', 'Metro icon should be 🚇');
+
+  // Short walking distance (e.g. 500m)
+  const walkingTransit = getTransitFromDistanceKm(0.8);
+  console.assert(walkingTransit.transitType === 'WALKING', '0.8km must be WALKING');
+  console.assert(walkingTransit.icon === '🚶', 'Walking icon should be 🚶');
+  console.assert(walkingTransit.estimatedMinutes === 10, `Walking minutes for 0.8km should be 10, got ${walkingTransit.estimatedMinutes}`);
+
+  console.log('  ✅ Campus Transit & Distance Tests Passed!\n');
 
   console.log('🎉 All Unit Tests Completed Successfully!');
 }
