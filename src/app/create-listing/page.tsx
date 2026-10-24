@@ -305,67 +305,100 @@ export default function CreateListingPage() {
     );
   }
 
+  const STEP_TITLES = [
+    '',
+    'Kategori Seçimi',
+    'İlan Detayları',
+    'Konum & Kampüs',
+    'Fotoğraf Ekleme',
+    'Önizleme & Yayınla',
+  ];
+
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+    <div className="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 py-5 sm:py-10 pb-28 sm:pb-12 space-y-6 sm:space-y-8">
       {/* Header */}
-      <div className="text-center space-y-2">
-        <div className="inline-flex items-center gap-2 bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-xs font-bold">
-          <PlusCircle className="w-4 h-4 text-emerald-600" />
+      <div className="text-center space-y-1.5 sm:space-y-2">
+        <div className="inline-flex items-center gap-1.5 bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-xs font-bold">
+          <PlusCircle className="w-3.5 h-3.5 text-emerald-600" />
           <span>Ücretsiz İlan Ver</span>
         </div>
-        <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
           Öğrenci İlanı Oluştur
         </h1>
-        <p className="text-slate-500 text-sm">
-          Evini, odanı veya eşyalarını doğrulanmış üniversite öğrencileriyle paylaş.
+        <p className="text-slate-500 text-xs sm:text-sm max-w-md mx-auto">
+          Evini, odanı veya eşyalarını doğrulanmış üniversite öğrencileriyle güvenle paylaş.
         </p>
       </div>
 
-      {/* Step Indicators */}
-      <div className="flex items-center justify-between border-b border-slate-200 pb-4 text-xs font-bold text-slate-400 max-w-xl mx-auto">
+      {/* Mobile Step Progress Indicator (sm:hidden) */}
+      <div className="sm:hidden bg-white rounded-2xl border border-slate-200/90 p-3.5 shadow-xs space-y-2">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-black shadow-xs">
+              {step}
+            </span>
+            <span className="text-xs font-bold text-slate-800">
+              {STEP_TITLES[step]}
+            </span>
+          </div>
+          <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full">
+            Adım {step} / 5
+          </span>
+        </div>
+        {/* Animated Progress Bar */}
+        <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+          <div
+            className="bg-gradient-to-r from-emerald-500 to-teal-500 h-full rounded-full transition-all duration-300 ease-out"
+            style={{ width: `${(step / 5) * 100}%` }}
+          />
+        </div>
+      </div>
+
+      {/* Desktop Step Indicators (hidden sm:flex) */}
+      <div className="hidden sm:flex items-center justify-between border-b border-slate-200 pb-4 text-xs font-bold text-slate-400 max-w-xl mx-auto">
         <button
           onClick={() => canGoToStep(1)}
-          className={`flex items-center gap-1.5 ${step >= 1 ? 'text-emerald-600' : ''}`}
+          className={`flex items-center gap-1.5 transition-colors ${step >= 1 ? 'text-emerald-600' : 'hover:text-slate-600'}`}
         >
-          <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs ${step === 1 ? 'bg-emerald-600 text-white' : 'bg-slate-200'}`}>1</span>
+          <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${step === 1 ? 'bg-emerald-600 text-white' : step > 1 ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-600'}`}>1</span>
           Kategori
         </button>
         <span className="text-slate-300">—</span>
         <button
           onClick={() => canGoToStep(2)}
-          className={`flex items-center gap-1.5 ${step >= 2 ? 'text-emerald-600' : ''}`}
+          className={`flex items-center gap-1.5 transition-colors ${step >= 2 ? 'text-emerald-600' : 'hover:text-slate-600'}`}
         >
-          <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs ${step === 2 ? 'bg-emerald-600 text-white' : 'bg-slate-200'}`}>2</span>
+          <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${step === 2 ? 'bg-emerald-600 text-white' : step > 2 ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-600'}`}>2</span>
           Detaylar
         </button>
         <span className="text-slate-300">—</span>
         <button
           onClick={() => canGoToStep(3)}
-          className={`flex items-center gap-1.5 ${step >= 3 ? 'text-emerald-600' : ''}`}
+          className={`flex items-center gap-1.5 transition-colors ${step >= 3 ? 'text-emerald-600' : 'hover:text-slate-600'}`}
         >
-          <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs ${step === 3 ? 'bg-emerald-600 text-white' : 'bg-slate-200'}`}>3</span>
+          <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${step === 3 ? 'bg-emerald-600 text-white' : step > 3 ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-600'}`}>3</span>
           Konum
         </button>
         <span className="text-slate-300">—</span>
         <button
           onClick={() => canGoToStep(4)}
-          className={`flex items-center gap-1.5 ${step >= 4 ? 'text-emerald-600' : ''}`}
+          className={`flex items-center gap-1.5 transition-colors ${step >= 4 ? 'text-emerald-600' : 'hover:text-slate-600'}`}
         >
-          <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs ${step === 4 ? 'bg-emerald-600 text-white' : 'bg-slate-200'}`}>4</span>
+          <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${step === 4 ? 'bg-emerald-600 text-white' : step > 4 ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-600'}`}>4</span>
           Fotoğraflar
         </button>
         <span className="text-slate-300">—</span>
         <button
           onClick={() => canGoToStep(5)}
-          className={`flex items-center gap-1.5 ${step >= 5 ? 'text-emerald-600' : ''}`}
+          className={`flex items-center gap-1.5 transition-colors ${step >= 5 ? 'text-emerald-600' : 'hover:text-slate-600'}`}
         >
-          <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs ${step === 5 ? 'bg-emerald-600 text-white' : 'bg-slate-200'}`}>5</span>
+          <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${step === 5 ? 'bg-emerald-600 text-white' : 'bg-slate-200 text-slate-600'}`}>5</span>
           Önizleme
         </button>
       </div>
 
       {error && (
-        <div className="bg-rose-50 border border-rose-200 text-rose-700 p-4 rounded-2xl text-xs font-semibold flex items-center gap-2">
+        <div className="bg-rose-50 border border-rose-200 text-rose-700 p-3.5 sm:p-4 rounded-2xl text-xs font-semibold flex items-center gap-2">
           <AlertCircle className="w-4 h-4 shrink-0" />
           <span>{error}</span>
         </div>
@@ -373,13 +406,16 @@ export default function CreateListingPage() {
 
       {/* STEP 1: CATEGORY */}
       {step === 1 && (
-        <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 space-y-6 shadow-xs">
-          <h2 className="text-xl font-bold text-slate-900">1. Kategori Seçiniz</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="bg-white rounded-3xl border border-slate-200/90 p-4 sm:p-8 space-y-5 sm:space-y-6 shadow-xs">
+          <div>
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900">1. Kategori Seçiniz</h2>
+            <p className="text-xs text-slate-500 mt-0.5">Paylaşmak istediğiniz ilanın türünü belirleyin.</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             {[
               { id: 'HOUSE', title: '🏠 Kiralık Ev', desc: '1+1, 2+1 veya komple öğrenci dairesi' },
               { id: 'ROOMMATE', title: '👥 Ev Arkadaşı', desc: 'Mevcut evine oda veya ev arkadaşı arayanlar' },
-              { id: 'ROOM', title: '🛏️ Kiralık Oda', desc: 'Evdeki tek kişil kiralık öğrenci odası' },
+              { id: 'ROOM', title: '🛏️ Kiralık Oda', desc: 'Evdeki tek kişilik kiralık öğrenci odası' },
               { id: 'FURNITURE', title: '🛋️ İkinci El Eşya', desc: 'Masa, koltuk, yatak, beyaz eşya vs.' },
               { id: 'HOUSE_PACKAGE', title: '📦 Komple Ev Eşyası Paketi', desc: 'Mezun olan öğrenciden toplu ev eşyası' },
             ].map((item) => (
@@ -387,15 +423,15 @@ export default function CreateListingPage() {
                 key={item.id}
                 type="button"
                 onClick={() => setCategory(item.id as any)}
-                className={`p-5 rounded-2xl text-left border-2 transition-all flex flex-col justify-between ${
+                className={`p-4 sm:p-5 rounded-2xl text-left border-2 transition-all flex flex-col justify-between ${
                   category === item.id
-                    ? 'border-emerald-600 bg-emerald-50/60 shadow-sm'
-                    : 'border-slate-200 hover:border-slate-300 bg-slate-50'
+                    ? 'border-emerald-600 bg-emerald-50/70 shadow-sm'
+                    : 'border-slate-200 hover:border-slate-300 bg-slate-50/80 active:bg-slate-100'
                 }`}
               >
                 <div>
-                  <div className="font-extrabold text-slate-900 text-base">{item.title}</div>
-                  <div className="text-xs text-slate-500 mt-1">{item.desc}</div>
+                  <div className="font-extrabold text-slate-900 text-sm sm:text-base">{item.title}</div>
+                  <div className="text-xs text-slate-500 mt-1 leading-snug">{item.desc}</div>
                 </div>
                 {category === item.id && (
                   <div className="mt-3 text-xs font-bold text-emerald-700 flex items-center gap-1">
@@ -407,10 +443,11 @@ export default function CreateListingPage() {
             ))}
           </div>
 
-          <div className="flex justify-end pt-4">
+          <div className="hidden sm:flex justify-end pt-4">
             <button
+              type="button"
               onClick={() => setStep(2)}
-              className="bg-emerald-600 text-white font-bold px-6 py-3 rounded-2xl text-sm hover:bg-emerald-700 flex items-center gap-2 shadow-md shadow-emerald-600/30"
+              className="bg-emerald-600 text-white font-bold px-6 py-3 rounded-2xl text-sm hover:bg-emerald-700 flex items-center gap-2 shadow-md shadow-emerald-600/30 transition"
             >
               Devam Et
               <ArrowRight className="w-4 h-4" />
@@ -421,17 +458,20 @@ export default function CreateListingPage() {
 
       {/* STEP 2: DETAILS */}
       {step === 2 && (
-        <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 space-y-6 shadow-xs">
-          <h2 className="text-xl font-bold text-slate-900">2. İlan Detayları</h2>
+        <div className="bg-white rounded-3xl border border-slate-200/90 p-4 sm:p-8 space-y-5 sm:space-y-6 shadow-xs">
+          <div>
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900">2. İlan Detayları</h2>
+            <p className="text-xs text-slate-500 mt-0.5">İlan başlığı, fiyatı ve açıklamasını doldurun.</p>
+          </div>
 
           <div className="space-y-4">
             <div>
-              <div className="flex justify-between items-center mb-2">
+              <div className="flex justify-between items-center mb-1.5">
                 <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
                   İlan Başlığı *
                 </label>
                 <span className={`text-[11px] ${title.trim().length >= 5 ? 'text-emerald-600 font-semibold' : 'text-slate-400'}`}>
-                  {title.trim().length >= 5 ? '✓ Başlık geçerli' : 'En az 5 karakter'} ({title.trim().length}/120)
+                  {title.trim().length >= 5 ? '✓ Geçerli' : 'En az 5 karakter'} ({title.trim().length}/120)
                 </span>
               </div>
               <input
@@ -443,13 +483,13 @@ export default function CreateListingPage() {
                 }}
                 maxLength={120}
                 placeholder="Örn: Kadıköy Moda'da Marmara'ya 10 Dk 2+1 Öğrenci Evi"
-                className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-sm text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:outline-hidden"
+                className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-base sm:text-sm text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:outline-hidden"
               />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                   Fiyat (₺) *
                 </label>
                 <input
@@ -460,19 +500,19 @@ export default function CreateListingPage() {
                     if (error) setError('');
                   }}
                   placeholder="Örn: 18500"
-                  className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-sm text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:outline-hidden"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-base sm:text-sm text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:outline-hidden"
                 />
               </div>
 
               {(category === 'FURNITURE' || category === 'HOUSE_PACKAGE') && (
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                     Eşya Durumu
                   </label>
                   <select
                     value={condition}
                     onChange={(e) => setCondition(e.target.value as any)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-sm text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:outline-hidden"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-base sm:text-sm text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:outline-hidden"
                   >
                     <option value="NEW">Sıfır / Hiç Kullanılmamış</option>
                     <option value="GOOD">Çok İyi</option>
@@ -483,26 +523,26 @@ export default function CreateListingPage() {
             </div>
 
             <div>
-              <div className="flex justify-between items-center mb-2">
+              <div className="flex justify-between items-center mb-1.5">
                 <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
                   Açıklama *
                 </label>
                 <span className={`text-[11px] font-semibold ${description.trim().length >= 10 ? 'text-emerald-600' : 'text-amber-600'}`}>
                   {description.trim().length >= 10
-                    ? `✓ Açıklama geçerli (${description.trim().length} karakter)`
-                    : `En az 10 karakter gerekli (Şu an: ${description.trim().length})`}
+                    ? `✓ Geçerli (${description.trim().length} krk)`
+                    : `En az 10 karakter (${description.trim().length}/10)`}
                 </span>
               </div>
               <textarea
-                rows={5}
+                rows={4}
                 value={description}
                 onChange={(e) => {
                   setDescription(e.target.value);
                   if (error) setError('');
                 }}
                 maxLength={3000}
-                placeholder="Ev, oda veya eşya hakkında detaylı bilgi verin (Isınma, faturalar, yürüme mesafeleri vb.)..."
-                className={`w-full bg-slate-50 border rounded-2xl p-3.5 text-sm text-slate-800 focus:ring-2 focus:outline-hidden ${
+                placeholder="Ev, oda veya eşya hakkında detaylı bilgi verin (Isınma, faturalar, yürüme mesafeleri, kurallar vb.)..."
+                className={`w-full bg-slate-50 border rounded-2xl p-3.5 text-base sm:text-sm text-slate-800 focus:ring-2 focus:outline-hidden ${
                   description.length > 0 && description.trim().length < 10
                     ? 'border-amber-300 focus:ring-amber-500/20'
                     : 'border-slate-200 focus:ring-emerald-500/20'
@@ -511,23 +551,25 @@ export default function CreateListingPage() {
             </div>
           </div>
 
-          <div className="flex items-center justify-between pt-4">
+          <div className="hidden sm:flex items-center justify-between pt-4">
             <button
+              type="button"
               onClick={() => {
                 setError('');
                 setStep(1);
               }}
-              className="bg-slate-100 text-slate-700 font-bold px-6 py-3 rounded-2xl text-sm hover:bg-slate-200 flex items-center gap-2"
+              className="bg-slate-100 text-slate-700 font-bold px-6 py-3 rounded-2xl text-sm hover:bg-slate-200 flex items-center gap-2 transition"
             >
               <ArrowLeft className="w-4 h-4" />
               Geri
             </button>
             <button
+              type="button"
               onClick={() => {
                 if (!validateStep2()) return;
                 setStep(3);
               }}
-              className="bg-emerald-600 text-white font-bold px-6 py-3 rounded-2xl text-sm hover:bg-emerald-700 flex items-center gap-2 shadow-md shadow-emerald-600/30"
+              className="bg-emerald-600 text-white font-bold px-6 py-3 rounded-2xl text-sm hover:bg-emerald-700 flex items-center gap-2 shadow-md shadow-emerald-600/30 transition"
             >
               Devam Et
               <ArrowRight className="w-4 h-4" />
@@ -538,12 +580,15 @@ export default function CreateListingPage() {
 
       {/* STEP 3: LOCATION & UNIVERSITY */}
       {step === 3 && (
-        <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 space-y-6 shadow-xs">
-          <h2 className="text-xl font-bold text-slate-900">3. Konum & İlgili Üniversite</h2>
+        <div className="bg-white rounded-3xl border border-slate-200/90 p-4 sm:p-8 space-y-5 sm:space-y-6 shadow-xs">
+          <div>
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900">3. Konum & Kampüs</h2>
+            <p className="text-xs text-slate-500 mt-0.5">Öğrencilerin haritada ve mesafe filtrelerinde sizi bulmasını sağlayın.</p>
+          </div>
 
           <div className="space-y-4">
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                 Yakın Olduğu Üniversite / Kampüs *
               </label>
               <select
@@ -552,7 +597,7 @@ export default function CreateListingPage() {
                   setUniversityId(e.target.value);
                   if (error) setError('');
                 }}
-                className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-sm text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:outline-hidden"
+                className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-base sm:text-sm text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:outline-hidden"
               >
                 {universities.map((u) => (
                   <option key={u.id} value={u.id}>
@@ -564,7 +609,7 @@ export default function CreateListingPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                   İlçe *
                 </label>
                 <select
@@ -573,7 +618,7 @@ export default function CreateListingPage() {
                     handleDistrictChange(e.target.value);
                     if (error) setError('');
                   }}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-sm text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:outline-hidden font-medium"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-base sm:text-sm text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:outline-hidden font-medium"
                 >
                   {ISTANBUL_DISTRICTS.map((d) => (
                     <option key={d.name} value={d.name}>
@@ -584,7 +629,7 @@ export default function CreateListingPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                   Semt / Mahalle *
                 </label>
                 <select
@@ -593,7 +638,7 @@ export default function CreateListingPage() {
                     handleNeighborhoodChange(e.target.value);
                     if (error) setError('');
                   }}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-sm text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:outline-hidden font-medium"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-base sm:text-sm text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:outline-hidden font-medium"
                 >
                   {getDistrictByName(district)?.neighborhoods.map((n) => (
                     <option key={n.name} value={n.name}>
@@ -605,7 +650,7 @@ export default function CreateListingPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                 Açık Adres / Konum Detayı (İsteğe Bağlı)
               </label>
               <input
@@ -617,11 +662,11 @@ export default function CreateListingPage() {
                   if (error) setError('');
                 }}
                 placeholder="Örn: Moda caddesi, tramvaya 2 dk, market karşısı..."
-                className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-sm text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:outline-hidden"
+                className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-base sm:text-sm text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:outline-hidden"
               />
             </div>
 
-            {/* Interactive Leaflet Map with Pin & Live Campus Distance */}
+            {/* Interactive Google Maps Leaflet Layer with Pin & Live Campus Distance */}
             <LocationPickerMap
               latitude={latitude}
               longitude={longitude}
@@ -635,18 +680,20 @@ export default function CreateListingPage() {
             />
           </div>
 
-          <div className="flex items-center justify-between pt-4">
+          <div className="hidden sm:flex items-center justify-between pt-4">
             <button
+              type="button"
               onClick={() => {
                 setError('');
                 setStep(2);
               }}
-              className="bg-slate-100 text-slate-700 font-bold px-6 py-3 rounded-2xl text-sm hover:bg-slate-200 flex items-center gap-2"
+              className="bg-slate-100 text-slate-700 font-bold px-6 py-3 rounded-2xl text-sm hover:bg-slate-200 flex items-center gap-2 transition"
             >
               <ArrowLeft className="w-4 h-4" />
               Geri
             </button>
             <button
+              type="button"
               onClick={() => {
                 if (!district.trim()) {
                   setError('Lütfen ilçe bilgisini giriniz.');
@@ -659,7 +706,7 @@ export default function CreateListingPage() {
                 setError('');
                 setStep(4);
               }}
-              className="bg-emerald-600 text-white font-bold px-6 py-3 rounded-2xl text-sm hover:bg-emerald-700 flex items-center gap-2 shadow-md shadow-emerald-600/30"
+              className="bg-emerald-600 text-white font-bold px-6 py-3 rounded-2xl text-sm hover:bg-emerald-700 flex items-center gap-2 shadow-md shadow-emerald-600/30 transition"
             >
               Devam Et
               <ArrowRight className="w-4 h-4" />
@@ -670,11 +717,14 @@ export default function CreateListingPage() {
 
       {/* STEP 4: PHOTOS */}
       {step === 4 && (
-        <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 space-y-6 shadow-xs">
-          <h2 className="text-xl font-bold text-slate-900">4. Fotoğraf Ekleme</h2>
+        <div className="bg-white rounded-3xl border border-slate-200/90 p-4 sm:p-8 space-y-5 sm:space-y-6 shadow-xs">
+          <div>
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900">4. Fotoğraf Ekleme</h2>
+            <p className="text-xs text-slate-500 mt-0.5">Fotoğraflı ilanlar öğrencilerden 5 kat daha hızlı dönüş alır.</p>
+          </div>
 
           {/* Real File Upload (Cloudinary) */}
-          <div className="border-2 border-dashed border-teal-200 bg-teal-50/50 hover:bg-teal-50 rounded-3xl p-6 text-center transition">
+          <div className="border-2 border-dashed border-teal-300 bg-teal-50/60 hover:bg-teal-50 rounded-3xl p-5 sm:p-8 text-center transition">
             <input
               type="file"
               id="file-upload"
@@ -689,68 +739,49 @@ export default function CreateListingPage() {
                 uploading ? 'opacity-50 pointer-events-none' : ''
               }`}
             >
-              <div className="w-12 h-12 rounded-2xl bg-teal-100 text-teal-600 flex items-center justify-center mb-2">
-                <Upload className="w-6 h-6" />
+              <div className="w-14 h-14 rounded-2xl bg-teal-100 text-teal-600 flex items-center justify-center mb-3 shadow-xs">
+                {uploading ? (
+                  <div className="w-6 h-6 border-2 border-teal-600 border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <Upload className="w-7 h-7" />
+                )}
               </div>
-              <span className="font-bold text-sm text-slate-900">
-                {uploading ? 'Görsel Yükleniyor...' : 'Cihazınızdan Fotoğraf Yükleyin'}
+              <span className="font-extrabold text-base sm:text-lg text-slate-900">
+                {uploading ? 'Görsel Yükleniyor...' : 'Fotoğraf Seç veya Fotoğraf Çek'}
               </span>
               <span className="text-xs text-slate-500 mt-1">
-                JPG, PNG veya WebP formatında, maksimum 5 MB (En fazla 10 adet)
+                JPG, PNG veya WebP • Maks. 5 MB (En fazla 10 adet)
               </span>
             </label>
           </div>
 
-          {/* Quick Mock Sample Images */}
-          <div className="space-y-3">
-            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
-              Hazır Örnek Fotoğraflardan Seç veya Bağlantı Ekle
-            </label>
-            <div className="flex flex-wrap gap-2">
-              {SAMPLE_MOCK_IMAGES.map((url, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={() => {
-                    if (!images.includes(url)) setImages([...images, url]);
-                  }}
-                  className="relative w-20 h-20 rounded-xl overflow-hidden border border-slate-200 hover:border-emerald-500"
-                >
-                  <img src={url} alt="" className="w-full h-full object-cover" />
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Add custom URL */}
-          <div className="flex gap-2">
-            <input
-              type="text"
-              placeholder="Görsel URL adresi yapıştırın (https://...)"
-              value={customImageUrl}
-              onChange={(e) => setCustomImageUrl(e.target.value)}
-              className="flex-1 bg-slate-50 border border-slate-200 rounded-2xl p-3 text-sm text-slate-800"
-            />
-            <button
-              type="button"
-              onClick={handleAddImage}
-              className="bg-slate-900 text-white px-4 py-3 rounded-2xl font-bold text-xs hover:bg-slate-800"
-            >
-              Ekle
-            </button>
-          </div>
-
-          {/* Added photos list */}
+          {/* Added photos grid */}
           <div className="space-y-2">
-            <div className="text-xs font-bold text-slate-700 uppercase">Yüklenmiş Fotoğraflar ({images.length})</div>
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                Yüklenmiş Fotoğraflar ({images.length}/10)
+              </span>
+              {images.length > 0 && (
+                <span className="text-[11px] text-emerald-600 font-semibold">
+                  İlk fotoğraf ana kapak görselidir
+                </span>
+              )}
+            </div>
+
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {images.map((url, index) => (
-                <div key={index} className="relative aspect-[4/3] rounded-xl overflow-hidden border border-slate-200 group">
+                <div key={index} className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-slate-200 shadow-xs group">
                   <img src={url} alt="" className="w-full h-full object-cover" />
+                  {index === 0 && (
+                    <span className="absolute bottom-1.5 left-1.5 bg-emerald-600/90 text-white text-[10px] font-bold px-2 py-0.5 rounded-md shadow-xs">
+                      Kapak
+                    </span>
+                  )}
                   <button
                     type="button"
                     onClick={() => handleRemoveImage(index)}
-                    className="absolute top-2 right-2 p-1.5 bg-rose-600 text-white rounded-full opacity-90 hover:opacity-100"
+                    aria-label="Fotoğrafı sil"
+                    className="absolute top-1.5 right-1.5 p-2 bg-rose-600 text-white rounded-xl shadow-md hover:bg-rose-700 active:scale-95 transition"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -759,17 +790,57 @@ export default function CreateListingPage() {
             </div>
           </div>
 
-          <div className="flex items-center justify-between pt-4">
+          {/* Collapsible / Optional Quick Mock Samples & URL */}
+          <div className="pt-2 border-t border-slate-100 space-y-3">
+            <div className="text-xs font-bold text-slate-600 uppercase tracking-wider">
+              Hızlı Örnek Fotoğraflar veya Link Ekle
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {SAMPLE_MOCK_IMAGES.map((url, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => {
+                    if (!images.includes(url)) setImages([...images, url]);
+                  }}
+                  className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden border border-slate-200 hover:border-emerald-500 active:scale-95 transition"
+                >
+                  <img src={url} alt="" className="w-full h-full object-cover" />
+                </button>
+              ))}
+            </div>
+
+            <div className="flex gap-2 pt-1">
+              <input
+                type="text"
+                placeholder="Görsel web adresi yapıştırın (https://...)"
+                value={customImageUrl}
+                onChange={(e) => setCustomImageUrl(e.target.value)}
+                className="flex-1 bg-slate-50 border border-slate-200 rounded-2xl p-3 text-base sm:text-xs text-slate-800"
+              />
+              <button
+                type="button"
+                onClick={handleAddImage}
+                className="bg-slate-900 text-white px-4 py-3 rounded-2xl font-bold text-xs hover:bg-slate-800 active:scale-95 transition shrink-0"
+              >
+                Ekle
+              </button>
+            </div>
+          </div>
+
+          <div className="hidden sm:flex items-center justify-between pt-4">
             <button
+              type="button"
               onClick={() => setStep(3)}
-              className="bg-slate-100 text-slate-700 font-bold px-6 py-3 rounded-2xl text-sm hover:bg-slate-200 flex items-center gap-2"
+              className="bg-slate-100 text-slate-700 font-bold px-6 py-3 rounded-2xl text-sm hover:bg-slate-200 flex items-center gap-2 transition"
             >
               <ArrowLeft className="w-4 h-4" />
               Geri
             </button>
             <button
+              type="button"
               onClick={() => setStep(5)}
-              className="bg-emerald-600 text-white font-bold px-6 py-3 rounded-2xl text-sm hover:bg-emerald-700 flex items-center gap-2 shadow-md shadow-emerald-600/30"
+              className="bg-emerald-600 text-white font-bold px-6 py-3 rounded-2xl text-sm hover:bg-emerald-700 flex items-center gap-2 shadow-md shadow-emerald-600/30 transition"
             >
               Önizlemeye Geç
               <Eye className="w-4 h-4" />
@@ -780,15 +851,13 @@ export default function CreateListingPage() {
 
       {/* STEP 5: PREVIEW & PUBLISH */}
       {step === 5 && (
-        <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 space-y-6 shadow-xs">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-xl font-bold text-slate-900">5. İlan Önizlemesi</h2>
-              <p className="text-xs text-slate-500">İlanınız diğer öğrencilere tam olarak bu şekilde görünecektir.</p>
-            </div>
+        <div className="bg-white rounded-3xl border border-slate-200/90 p-4 sm:p-8 space-y-5 sm:space-y-6 shadow-xs">
+          <div>
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900">5. İlan Önizlemesi</h2>
+            <p className="text-xs text-slate-500 mt-0.5">İlanınız diğer öğrencilere tam olarak bu şekilde görünecektir.</p>
           </div>
 
-          <div className="max-w-xs mx-auto">
+          <div className="max-w-xs mx-auto py-2">
             <ListingCard
               listing={{
                 id: 'preview',
@@ -814,7 +883,7 @@ export default function CreateListingPage() {
           <div className="bg-slate-50 border border-slate-200/90 rounded-2xl p-4 flex items-center justify-between gap-4">
             <div>
               <span className="block text-sm font-bold text-slate-800">Beni Telefonla Arayabilsinler</span>
-              <span className="block text-xs text-slate-500">
+              <span className="block text-xs text-slate-500 mt-0.5">
                 Açık olursa ilanınızda &quot;Telefonu Göster&quot; butonu yer alır. Kapalı tutarsanız öğrenciler yalnızca Gampüs üzerinden mesajlaşabilir.
               </span>
             </div>
@@ -825,22 +894,24 @@ export default function CreateListingPage() {
                 onChange={(e) => setAllowPhoneCalls(e.target.checked)}
                 className="sr-only peer"
               />
-              <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-600"></div>
+              <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
             </label>
           </div>
 
-          <div className="flex items-center justify-between pt-6 border-t border-slate-100">
+          <div className="hidden sm:flex items-center justify-between pt-6 border-t border-slate-100">
             <button
+              type="button"
               onClick={() => setStep(4)}
-              className="bg-slate-100 text-slate-700 font-bold px-6 py-3 rounded-2xl text-sm hover:bg-slate-200 flex items-center gap-2"
+              className="bg-slate-100 text-slate-700 font-bold px-6 py-3 rounded-2xl text-sm hover:bg-slate-200 flex items-center gap-2 transition"
             >
               <ArrowLeft className="w-4 h-4" />
               Geri
             </button>
             <button
+              type="button"
               onClick={handleSubmit}
               disabled={loading}
-              className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold px-8 py-3.5 rounded-2xl text-base shadow-lg shadow-emerald-600/30 hover:scale-105 transition-all disabled:opacity-50 flex items-center gap-2"
+              className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold px-8 py-3.5 rounded-2xl text-base shadow-lg shadow-emerald-600/30 hover:scale-105 active:scale-95 transition-all disabled:opacity-50 flex items-center gap-2"
             >
               <Sparkles className="w-5 h-5 fill-current" />
               {loading ? 'Yayınlanıyor...' : 'İlanı Hemen Yayınla'}
@@ -848,6 +919,95 @@ export default function CreateListingPage() {
           </div>
         </div>
       )}
+
+      {/* Sticky Mobile Action Bar (sm:hidden) */}
+      <div className="fixed bottom-0 left-0 right-0 z-30 sm:hidden bg-white/95 backdrop-blur-md border-t border-slate-200/90 px-4 py-3 shadow-[0_-4px_16px_rgba(0,0,0,0.06)] flex items-center justify-between gap-3">
+        {step > 1 ? (
+          <button
+            type="button"
+            onClick={() => {
+              setError('');
+              setStep(step - 1);
+            }}
+            className="bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-700 font-bold px-4 py-3 rounded-2xl text-xs flex items-center gap-1.5 transition shrink-0"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Geri
+          </button>
+        ) : (
+          <div />
+        )}
+
+        {step === 1 && (
+          <button
+            type="button"
+            onClick={() => setStep(2)}
+            className="flex-1 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-bold py-3 px-5 rounded-2xl text-xs flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/25 transition"
+          >
+            Devam Et
+            <ArrowRight className="w-4 h-4" />
+          </button>
+        )}
+
+        {step === 2 && (
+          <button
+            type="button"
+            onClick={() => {
+              if (!validateStep2()) return;
+              setStep(3);
+            }}
+            className="flex-1 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-bold py-3 px-5 rounded-2xl text-xs flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/25 transition"
+          >
+            Devam Et
+            <ArrowRight className="w-4 h-4" />
+          </button>
+        )}
+
+        {step === 3 && (
+          <button
+            type="button"
+            onClick={() => {
+              if (!district.trim()) {
+                setError('Lütfen ilçe bilgisini giriniz.');
+                return;
+              }
+              if (!universityId) {
+                setError('Lütfen ilgili kampüs / üniversiteyi seçiniz.');
+                return;
+              }
+              setError('');
+              setStep(4);
+            }}
+            className="flex-1 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-bold py-3 px-5 rounded-2xl text-xs flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/25 transition"
+          >
+            Devam Et
+            <ArrowRight className="w-4 h-4" />
+          </button>
+        )}
+
+        {step === 4 && (
+          <button
+            type="button"
+            onClick={() => setStep(5)}
+            className="flex-1 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-bold py-3 px-5 rounded-2xl text-xs flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/25 transition"
+          >
+            Önizlemeye Geç
+            <Eye className="w-4 h-4" />
+          </button>
+        )}
+
+        {step === 5 && (
+          <button
+            type="button"
+            onClick={handleSubmit}
+            disabled={loading}
+            className="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 active:scale-[0.98] text-white font-extrabold py-3 px-5 rounded-2xl text-xs flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/30 transition disabled:opacity-50"
+          >
+            <Sparkles className="w-4 h-4 fill-current" />
+            {loading ? 'Yayınlanıyor...' : 'İlanı Hemen Yayınla'}
+          </button>
+        )}
+      </div>
     </div>
   );
 }

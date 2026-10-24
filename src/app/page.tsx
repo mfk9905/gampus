@@ -61,7 +61,7 @@ export default async function HomePage({
           {/* Badge */}
           <div className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold backdrop-blur-md">
             <Sparkles className="w-4 h-4 text-emerald-400" />
-            <span>Öğrenciden Öğrenciye Güvenli Kampüs Pazaryeri</span>
+            <span>Gampüs (gampus) • Öğrenciden Öğrenciye Kampüs Pazaryeri</span>
           </div>
 
           {/* Heading */}
@@ -73,7 +73,7 @@ export default async function HomePage({
           </h1>
 
           <p className="text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto font-normal leading-relaxed">
-            Evini bul. Ev arkadaşını seç. İkinci el eşyalarını komisyonsuz, güvenle al ve sat.
+            Gampüs ile üniversitene en yakın evini bul, güvenilir ev arkadaşını seç, ikinci el eşyalarını komisyonsuz al ve sat.
           </p>
 
           {/* Action CTAs */}

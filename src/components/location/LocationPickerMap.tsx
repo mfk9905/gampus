@@ -14,6 +14,11 @@ interface LocationPickerMapProps {
   onChange: (lat: number, lng: number) => void;
 }
 
+// Google Maps high-speed tile endpoints (reliable, high-detail, never blocked)
+const GOOGLE_STREET_TILE_URL = 'https://mt{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}';
+const GOOGLE_HYBRID_TILE_URL = 'https://mt{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}';
+const ESRI_STREET_TILE_URL = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}';
+
 export default function LocationPickerMap({
   latitude,
   longitude,
@@ -42,6 +47,38 @@ export default function LocationPickerMap({
     }
   }, [latitude, longitude, campusLat, campusLng]);
 
+  // Helper to create tile layer
+  const createTileLayer = (L: any, type: 'street' | 'satellite') => {
+    if (type === 'satellite') {
+      return L.tileLayer(GOOGLE_HYBRID_TILE_URL, {
+        subdomains: ['0', '1', '2', '3'],
+        attribution: '&copy; Google Maps',
+        maxZoom: 20,
+      });
+    }
+
+    const layer = L.tileLayer(GOOGLE_STREET_TILE_URL, {
+      subdomains: ['0', '1', '2', '3'],
+      attribution: '&copy; Google Maps',
+      maxZoom: 20,
+    });
+
+    // Fallback to Esri World Street if Google is ever unreachable
+    layer.on('tileerror', () => {
+      if (mapRef.current && layer === tileLayerRef.current) {
+        mapRef.current.removeLayer(layer);
+        const fallback = L.tileLayer(ESRI_STREET_TILE_URL, {
+          attribution: '&copy; Esri',
+          maxZoom: 19,
+        });
+        fallback.addTo(mapRef.current);
+        tileLayerRef.current = fallback;
+      }
+    });
+
+    return layer;
+  };
+
   // Initialize Leaflet map
   useEffect(() => {
     if (typeof window === 'undefined' || !containerRef.current) return;
@@ -54,41 +91,35 @@ export default function LocationPickerMap({
 
       leafletInstanceRef.current = L;
 
-      // If map already exists, just return
-      if (mapRef.current) {
-        return;
-      }
+      // If map already exists, return
+      if (mapRef.current) return;
 
-      // Initialize map instance
+      // Initialize map instance with custom controls positioning
       const map = L.map(containerRef.current, {
-        center: [latitude || 41.0082, longitude || 28.9784],
+        center: [latitude || 40.9841, longitude || 29.0267],
         zoom: 15,
-        zoomControl: true,
+        zoomControl: false, // We reposition zoom controls to bottom-right to avoid badge clash
         scrollWheelZoom: false,
+        touchZoom: true,
       });
 
       mapRef.current = map;
 
-      // Reliable OpenStreetMap Layer (never blocked by adblockers)
-      const streetLayer = L.tileLayer(
-        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-        {
-          attribution: '&copy; OpenStreetMap contributors',
-          subdomains: ['a', 'b', 'c'],
-          maxZoom: 19,
-        }
-      );
+      // Add zoom control at bottomright so top-left badges never collide
+      L.control.zoom({ position: 'bottomright' }).addTo(map);
 
-      streetLayer.addTo(map);
-      tileLayerRef.current = streetLayer;
+      // Add high-resolution Google Maps Layer
+      const baseLayer = createTileLayer(L, 'street');
+      baseLayer.addTo(map);
+      tileLayerRef.current = baseLayer;
 
       // Custom Listing Pin SVG HTML
       const listingIcon = L.divIcon({
         className: 'custom-listing-pin',
         html: `
-          <div style="position: relative; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; cursor: grab;">
+          <div style="position: relative; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: grab;">
             <div style="position: absolute; width: 14px; height: 14px; background: rgba(5, 150, 105, 0.45); border-radius: 50%; transform: scale(2.2); animation: pulse 2s infinite;"></div>
-            <div style="width: 36px; height: 36px; background: #059669; border: 3px solid #ffffff; border-radius: 50%; box-shadow: 0 4px 14px rgba(5,150,105,0.5); display: flex; align-items: center; justify-content: center; color: white;">
+            <div style="width: 38px; height: 38px; background: #059669; border: 3px solid #ffffff; border-radius: 50%; box-shadow: 0 4px 14px rgba(5,150,105,0.5); display: flex; align-items: center; justify-content: center; color: white;">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                 <polyline points="9 22 9 12 15 12 15 22"></polyline>
@@ -96,8 +127,8 @@ export default function LocationPickerMap({
             </div>
           </div>
         `,
-        iconSize: [38, 38],
-        iconAnchor: [19, 19],
+        iconSize: [40, 40],
+        iconAnchor: [20, 20],
       });
 
       // Draggable listing marker
@@ -155,7 +186,7 @@ export default function LocationPickerMap({
         campusMarkerRef.current = campusMarker;
       }
 
-      // Force multiple invalidateSize calls to guarantee tile rendering
+      // Invalidate sizes repeatedly on render so tiles load completely
       requestAnimationFrame(() => {
         if (mapRef.current) mapRef.current.invalidateSize();
       });
@@ -166,7 +197,7 @@ export default function LocationPickerMap({
         if (mapRef.current) mapRef.current.invalidateSize();
       }, 500);
 
-      // ResizeObserver to automatically adjust whenever container is rendered or resized
+      // ResizeObserver to adjust whenever container size changes
       if (containerRef.current) {
         resizeObserver = new ResizeObserver(() => {
           if (mapRef.current) {
@@ -203,28 +234,9 @@ export default function LocationPickerMap({
       map.removeLayer(tileLayerRef.current);
     }
 
-    if (type === 'satellite') {
-      const satelliteLayer = L.tileLayer(
-        'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-        {
-          attribution: '&copy; Esri, Maxar, Earthstar Geographics',
-          maxZoom: 19,
-        }
-      );
-      satelliteLayer.addTo(map);
-      tileLayerRef.current = satelliteLayer;
-    } else {
-      const streetLayer = L.tileLayer(
-        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-        {
-          attribution: '&copy; OpenStreetMap contributors',
-          subdomains: ['a', 'b', 'c'],
-          maxZoom: 19,
-        }
-      );
-      streetLayer.addTo(map);
-      tileLayerRef.current = streetLayer;
-    }
+    const newLayer = createTileLayer(L, type);
+    newLayer.addTo(map);
+    tileLayerRef.current = newLayer;
 
     map.invalidateSize();
   };
@@ -236,7 +248,7 @@ export default function LocationPickerMap({
     }
   };
 
-  // Sync marker position & map view if coordinates change externally (e.g. from dropdown)
+  // Sync marker position & map view if coordinates change externally
   useEffect(() => {
     if (mapRef.current && markerRef.current) {
       const currentPos = markerRef.current.getLatLng();
@@ -270,29 +282,29 @@ export default function LocationPickerMap({
 
   return (
     <div className="space-y-2">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
         <label className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
           <MapPin className="w-3.5 h-3.5 text-emerald-600" />
           Haritada Konum Seçimi
         </label>
         <span className="text-[11px] text-slate-500 font-medium">
-          İşareti sürükleyebilir veya haritaya tıklayarak konumu netleştirebilirsiniz.
+          İşareti sürükleyebilir veya haritaya dokunarak konumu belirleyebilirsiniz.
         </span>
       </div>
 
-      <div className="relative rounded-2xl overflow-hidden border border-slate-200/90 shadow-md bg-slate-100 h-72 sm:h-80 w-full">
-        {/* Leaflet container with explicit height */}
+      <div className="relative rounded-2xl overflow-hidden border border-slate-200/90 shadow-sm bg-slate-100 h-64 sm:h-80 w-full touch-pan-x touch-pan-y">
+        {/* Leaflet container */}
         <div
           ref={containerRef}
-          className="w-full h-full min-h-[288px] z-0"
-          style={{ width: '100%', height: '100%', minHeight: '288px' }}
+          className="w-full h-full min-h-[256px] sm:min-h-[320px] z-0"
+          style={{ width: '100%', height: '100%' }}
         />
 
-        {/* Real-time Transit Overlay Badge (Top Left) */}
+        {/* Real-time Transit Overlay Badge (Top Left, responsive) */}
         {transitInfo && (
-          <div className="absolute top-3 left-3 right-3 sm:right-auto sm:max-w-md z-10 pointer-events-none">
-            <div className="bg-white/95 backdrop-blur-md border border-slate-200 shadow-lg rounded-xl px-3.5 py-2 flex items-center gap-2.5 text-xs">
-              <span className="text-base shrink-0">{transitInfo.icon}</span>
+          <div className="absolute top-2.5 left-2.5 max-w-[calc(100%-140px)] sm:max-w-md z-10 pointer-events-none">
+            <div className="bg-white/95 backdrop-blur-md border border-slate-200 shadow-md rounded-xl px-2.5 py-1.5 sm:px-3.5 sm:py-2 flex items-center gap-2 text-[11px] sm:text-xs">
+              <span className="text-sm sm:text-base shrink-0">{transitInfo.icon}</span>
               <div className="truncate">
                 <span className="font-extrabold text-slate-900">
                   {campusName ? `${campusName}: ` : 'Kampüse: '}
@@ -300,12 +312,12 @@ export default function LocationPickerMap({
                 <span className="font-bold text-emerald-700">
                   {transitInfo.distanceFormatted}
                 </span>
-                <span className="text-slate-600 ml-1 font-medium">
+                <span className="text-slate-600 ml-1 font-medium hidden xs:inline sm:inline">
                   ({transitInfo.estimatedMinutes} dk{' '}
                   {transitInfo.transitType === 'WALKING'
                     ? 'yürüme'
                     : transitInfo.transitType === 'BUS'
-                    ? 'toplu taşıma'
+                    ? 'otobüs'
                     : 'metroyla'}
                   )
                 </span>
@@ -315,11 +327,11 @@ export default function LocationPickerMap({
         )}
 
         {/* Map Type Switcher & Recenter Controls (Top Right) */}
-        <div className="absolute top-3 right-3 z-10 flex items-center gap-1.5 bg-white/95 backdrop-blur-md p-1 rounded-xl border border-slate-200/90 shadow-md text-xs font-semibold">
+        <div className="absolute top-2.5 right-2.5 z-10 flex items-center gap-1 bg-white/95 backdrop-blur-md p-1 rounded-xl border border-slate-200/90 shadow-md text-[11px] sm:text-xs font-semibold">
           <button
             type="button"
             onClick={() => handleMapTypeToggle('street')}
-            className={`px-2.5 py-1 rounded-lg transition-all ${
+            className={`px-2 py-1 rounded-lg transition-all ${
               mapType === 'street'
                 ? 'bg-emerald-600 text-white shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
@@ -330,7 +342,7 @@ export default function LocationPickerMap({
           <button
             type="button"
             onClick={() => handleMapTypeToggle('satellite')}
-            className={`px-2.5 py-1 rounded-lg transition-all flex items-center gap-1 ${
+            className={`px-2 py-1 rounded-lg transition-all flex items-center gap-1 ${
               mapType === 'satellite'
                 ? 'bg-emerald-600 text-white shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
@@ -339,19 +351,19 @@ export default function LocationPickerMap({
             <Layers className="w-3 h-3" />
             Uydu
           </button>
-          <div className="w-px h-4 bg-slate-200 mx-0.5" />
+          <div className="w-px h-3.5 bg-slate-200 mx-0.5" />
           <button
             type="button"
             onClick={handleCenter}
             title="İşaretçiyi Ortala"
             className="p-1 text-slate-600 hover:text-emerald-600 rounded-lg hover:bg-slate-100 transition-colors"
           >
-            <Crosshair className="w-4 h-4" />
+            <Crosshair className="w-3.5 h-3.5" />
           </button>
         </div>
 
-        {/* Coordinates indicator at bottom-right */}
-        <div className="absolute bottom-2 right-2 z-10 pointer-events-none bg-slate-900/80 backdrop-blur-xs text-white text-[10px] font-mono px-2 py-0.5 rounded-md shadow-xs">
+        {/* Coordinates indicator at bottom-left to not clash with bottom-right zoom controls */}
+        <div className="absolute bottom-2 left-2 z-10 pointer-events-none bg-slate-900/80 backdrop-blur-xs text-white text-[10px] font-mono px-2 py-0.5 rounded-md shadow-xs">
           {latitude.toFixed(4)}, {longitude.toFixed(4)}
         </div>
       </div>
