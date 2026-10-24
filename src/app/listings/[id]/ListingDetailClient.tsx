@@ -383,7 +383,12 @@ export default function ListingDetailClient({ listing, currentUserId }: ListingD
                     <Edit3 className="w-3.5 h-3.5 text-teal-600" />
                     İlanı Düzenle
                   </Link>
-                  {!isInactive && (
+                  {listing.featured ? (
+                    <div className="flex-1 bg-amber-50 text-amber-900 border border-amber-200 font-bold py-2.5 px-3 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-xs">
+                      <Sparkles className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
+                      ⭐ Öne Çıkarılmış İlan
+                    </div>
+                  ) : !isInactive ? (
                     <button
                       onClick={() => setIsBoostModalOpen(true)}
                       className="flex-1 bg-amber-600 hover:bg-amber-700 text-white font-bold py-2.5 px-3 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-xs transition cursor-pointer"
@@ -391,7 +396,7 @@ export default function ListingDetailClient({ listing, currentUserId }: ListingD
                       <Rocket className="w-3.5 h-3.5" />
                       Öne Çıkar
                     </button>
-                  )}
+                  ) : null}
                 </div>
                 {isInactive && (
                   <div className="text-xs text-amber-800 bg-amber-100/70 p-2.5 rounded-xl text-center font-medium">

@@ -533,11 +533,13 @@ export default function MessagesClient({
                     }`}
                   >
                     {/* Listing Thumbnail */}
-                    <div className="relative w-12 h-12 rounded-xl overflow-hidden shrink-0 border border-slate-200">
-                      <img src={listingImg} alt="" className="w-full h-full object-cover" />
+                    <div className="relative shrink-0">
+                      <div className="w-12 h-12 rounded-xl overflow-hidden border border-slate-200 bg-slate-100">
+                        <img src={listingImg} alt="" className="w-full h-full object-cover" />
+                      </div>
                       {conv.unreadCount > 0 && (
-                        <span className="absolute -top-1 -right-1 w-4 h-4 bg-teal-600 text-white font-bold text-[10px] rounded-full flex items-center justify-center border-2 border-white">
-                          {conv.unreadCount}
+                        <span className="absolute -top-1.5 -right-1.5 min-w-[20px] h-5 px-1 bg-teal-600 text-white font-black text-[10px] rounded-full flex items-center justify-center border-2 border-white shadow-xs z-10">
+                          {conv.unreadCount > 9 ? '9+' : conv.unreadCount}
                         </span>
                       )}
                     </div>
@@ -564,13 +566,20 @@ export default function MessagesClient({
                         {conv.listing?.title}
                       </div>
 
-                      <p className="text-[11px] text-slate-500 truncate mt-0.5">
-                        {conv.isBlocked ? (
-                          <span className="text-rose-500 font-semibold">[Engellendi]</span>
-                        ) : (
-                          conv.lastMessageText || 'Sohbet başladı...'
+                      <div className="flex items-center justify-between gap-1 mt-0.5">
+                        <p className={`text-[11px] truncate flex-1 ${conv.unreadCount > 0 ? 'font-semibold text-slate-900' : 'text-slate-500'}`}>
+                          {conv.isBlocked ? (
+                            <span className="text-rose-500 font-semibold">[Engellendi]</span>
+                          ) : (
+                            conv.lastMessageText || 'Sohbet başladı...'
+                          )}
+                        </p>
+                        {conv.unreadCount > 0 && (
+                          <span className="shrink-0 bg-teal-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-4 text-center">
+                            {conv.unreadCount}
+                          </span>
                         )}
-                      </p>
+                      </div>
                     </div>
                   </button>
                 );
