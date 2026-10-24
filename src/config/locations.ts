@@ -250,3 +250,4 @@ export function getDistrictByName(name: string): District | undefined {
 export function getAllDistrictNames(): string[] {
   return ISTANBUL_DISTRICTS.map((d) => d.name);
 }
+
