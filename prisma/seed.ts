@@ -10,12 +10,14 @@ async function main() {
     process.exit(1);
   }
 
-  console.log('🌱 Starting UNILIVE database seeding...');
+  console.log('🌱 Starting GAMPÜS database seeding with clearly marked [TEST] data...');
 
-  // Clean existing data
+  // Clean existing test data safely
   await prisma.report.deleteMany();
   await prisma.contactLead.deleteMany();
   await prisma.favorite.deleteMany();
+  await prisma.message.deleteMany();
+  await prisma.conversation.deleteMany();
   await prisma.listingImage.deleteMany();
   await prisma.listing.deleteMany();
   await prisma.user.deleteMany();
@@ -128,8 +130,8 @@ async function main() {
   // 2. USERS
   const adminUser = await prisma.user.create({
     data: {
-      name: 'UNILIVE Yönetici',
-      email: 'admin@unilive.app',
+      name: 'Gampüs Yönetici (Admin)',
+      email: 'admin@gampus.app',
       passwordHash,
       phone: '+905321002020',
       role: Role.ADMIN,
@@ -151,17 +153,16 @@ async function main() {
   for (let i = 0; i < names.length; i++) {
     const uni = universities[i % universities.length];
     const emailName = names[i].toLowerCase().replace(/[^a-z]/g, '');
-    const isEdu = i % 2 === 0;
-    const email = isEdu ? `${emailName}@${uni.shortName.toLowerCase()}.edu.tr` : `${emailName}${i}@gmail.com`;
+    const email = `test.${emailName}${i + 1}@gampus.test`;
 
     const user = await prisma.user.create({
       data: {
-        name: names[i],
+        name: `${names[i]} [TEST]`,
         email,
         passwordHash,
         phone: `+9053${Math.floor(10000000 + Math.random() * 90000000)}`,
         universityId: uni.id,
-        studentVerified: isEdu,
+        studentVerified: i % 2 === 0,
         phoneVerified: i % 3 !== 0,
         role: Role.USER,
         avatar: `https://images.unsplash.com/photo-${1500000000000 + (i * 1234567) % 900000000}?w=200&auto=format&fit=crop&q=80`,
@@ -395,7 +396,7 @@ async function main() {
     };
 
     const titleList = catTitles[tmpl.category] || catTitles.HOUSE;
-    const title = `${titleList[i % titleList.length]} #${i + 1}`;
+    const title = `[TEST İLAN] ${titleList[i % titleList.length]} #${i + 1}`;
     const priceVariance = (i % 5) * 500 - 1000;
     const price = Math.max(1200, tmpl.price + priceVariance);
 
@@ -405,7 +406,7 @@ async function main() {
         universityId: uni.id,
         category: tmpl.category,
         title,
-        description: `${tmpl.description}\n\nİletişim için WhatsApp üzerinden hemen yazabilirsiniz. İlan günceldir.`,
+        description: `⚠️ [BU BİR TEST İLANIDIR - GAMPÜS DEMO]\n\n${tmpl.description}\n\nNot: Bu ilan sistem arayüzünü ve özellikleri test etmek amacıyla oluşturulmuş örnek test verisidir.`,
         price,
         locationText: `${uni.district}, İstanbul (Kampüse yakl. ${(0.3 + (i % 7) * 0.4).toFixed(1)} km)`,
         district: uni.district,
@@ -500,7 +501,7 @@ async function main() {
   }
 
   console.log(`✅ Created ${totalListings} realistic student listings with photos, favorites, and leads.`);
-  console.log('🎉 UNILIVE Seeding completed successfully!');
+  console.log('🎉 GAMPÜS Seeding completed successfully!');
 }
 
 main()

@@ -8,6 +8,7 @@
     "start": "next start",
     "db:push": "prisma db push",
     "db:seed": "prisma db seed",
+    "db:clean-test-data": "tsx scripts/clean-test-data.ts",
     "test": "tsx --env-file=.env src/__tests__/unit-services.test.ts && tsx --env-file=.env src/__tests__/security-audit.test.ts"
   },
   "prisma": {
